@@ -129,6 +129,8 @@ class CalendarPageController: UIPageViewController {
     }
 }
 
+// MARK: PageViewController Data Source
+
 extension CalendarPageController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         switch displayState {
@@ -156,6 +158,8 @@ extension CalendarPageController: UIPageViewControllerDataSource {
         }
     }
 }
+
+// MARK: PageViewController Delegate
 
 extension CalendarPageController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {

@@ -14,7 +14,7 @@ open class MKCalendar: UIViewController {
     
     open weak var eventsProvider: EventsProvider?
     
-    open var layout: MKCalendarLayout = MKCalendarDefaultLayout()
+    @NSCopying open var layout: MKCalendarLayout = MKCalendarDefaultLayout()
     
     public var displayState: DisplayState {
         get {
@@ -30,7 +30,11 @@ open class MKCalendar: UIViewController {
     
     public var hideTimelineView: Bool = false {
         didSet{
-            timelineContainerHeightConstraint.isActive = hideTimelineView
+            if case .week = displayState, !hideTimelineView {
+                timelineContainerHeightConstraint.constant = layout.timelineHuggingHeight
+            } else {
+                timelineContainerHeightConstraint.constant = 0
+            }
         }
     }
     
@@ -56,14 +60,14 @@ open class MKCalendar: UIViewController {
 
     var timelineContainerHeightConstraint: NSLayoutConstraint!
     
-    public init(initialState: DisplayState) {
-        super.init(nibName: nil, bundle: nil)
+    public init(initialState: DisplayState = .month(date: Date())) {
         calendarPage = CalendarPageController(initialState: initialState)
+        super.init(nibName: nil, bundle: nil)
     }
     
     required public init?(coder: NSCoder) {
-        super.init(coder: coder)
         calendarPage = CalendarPageController(initialState: .month(date: Date()))
+        super.init(coder: coder)
     }
     
     open override func viewDidLoad() {
@@ -87,30 +91,34 @@ open class MKCalendar: UIViewController {
             calendarPage.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentPadding.left),
             calendarPage.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentPadding.right),
         ])
-        
+
         let width = view.bounds.inset(by: contentPadding).width
         let weekViewRowHeight: CGFloat = width / 7
-        calendarPageHeightConstraint = calendarPage.view.heightAnchor.constraint(equalToConstant: weekViewRowHeight)
-        calendarPageHeightConstraint.priority = .defaultLow
-        if case .week(_) = displayState {
-            calendarPageHeightConstraint.isActive = true
+        var calendarPageHeight: CGFloat
+        if case .week = displayState {
+            calendarPageHeight = weekViewRowHeight
+        } else {
+            calendarPageHeight = weekViewRowHeight * 6
         }
+        calendarPageHeightConstraint = calendarPage.view.heightAnchor.constraint(equalToConstant: calendarPageHeight)
+        calendarPageHeightConstraint.isActive = true
         
         view.addSubview(timelineContainer)
         timelineContainer.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            timelineContainer.topAnchor.constraint(equalTo: calendarPage.view.bottomAnchor, constant: 10),
-            timelineContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentPadding.left + 10),
-            timelineContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentPadding.right - 10),
+            timelineContainer.topAnchor.constraint(equalTo: calendarPage.view.bottomAnchor),
+            timelineContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentPadding.left),
+            timelineContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentPadding.right),
             timelineContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-        timelineContainerHeightConstraint = timelineContainer.heightAnchor.constraint(equalToConstant: 0)
-        if case .week(_) = displayState {
-            timelineContainerHeightConstraint.isActive = hideTimelineView
+        if case .week = displayState, !hideTimelineView {
+            timelineContainerHeightConstraint = timelineContainer.heightAnchor.constraint(equalToConstant: layout.timelineHuggingHeight)
         } else {
-            timelineContainerHeightConstraint.isActive = true
+            timelineContainerHeightConstraint = timelineContainer.heightAnchor.constraint(equalToConstant: 0)
         }
+//        timelineContainerHeightConstraint.priority = .defaultHigh
+        timelineContainerHeightConstraint.isActive = true
         
         updateHeaderView()
         
@@ -141,6 +149,8 @@ open class MKCalendar: UIViewController {
         parent.view.addSubview(self.view)
     }
     
+    // MARK: Calendar Subviews Update
+    
     func updateHeaderView() {
         switch displayState {
         case .month(let month):
@@ -165,6 +175,7 @@ open class MKCalendar: UIViewController {
     func updateTimelineView() {
         
         let selectedDate: Date = (selectedDays.first?.date ?? Date()).dateOnly(calendar: calendar)
+        timeline.date = selectedDate
         let end = calendar.date(byAdding: .day, value: 1, to: selectedDate)!
         let day = selectedDate ... end
         let events = eventsProvider?.calendar(self, eventsForDate: selectedDate)
@@ -173,14 +184,38 @@ open class MKCalendar: UIViewController {
         
     }
     
-    func transition(toDisplayState state: DisplayState, animated: Bool) {
-        calendarPage.transition(toDisplayState: state, animated: animated)
+    public func setHideTimelineView(_ value: Bool, animated: Bool) {
+        hideTimelineView = value
+        if animated {
+            UIView.animate(withDuration: 0.5) {
+                self.view.superview!.layoutIfNeeded()
+                self.view.layoutIfNeeded()
+                self.timelineContainer.layoutIfNeeded()
+            }
+        }
+    }
+    
+    public func transition(toDisplayState state: DisplayState, animated: Bool) {
+        self.calendarPage.transition(toDisplayState: state, animated: animated)
+        let contentPadding = layout.edgeInset(forCalendarDisplayState: .month(date: Date()))
+        let width = view.bounds.inset(by: contentPadding).width
+        let weekViewRowHeight: CGFloat = width / 7
         if case .week(_) = state {
-            calendarPageHeightConstraint.isActive = true
-            timelineContainerHeightConstraint.isActive = hideTimelineView
+            timelineContainerHeightConstraint.constant = hideTimelineView ? 0 : layout.timelineHuggingHeight
+            calendarPageHeightConstraint.constant = weekViewRowHeight
         } else {
-            calendarPageHeightConstraint.isActive = false
-            timelineContainerHeightConstraint.isActive = true
+            timelineContainerHeightConstraint.constant = 0
+            calendarPageHeightConstraint.constant = weekViewRowHeight * 6
+        }
+        if animated {
+            UIView.animate(withDuration: 0.5, animations: {
+                self.view.layoutIfNeeded()
+                self.view.superview?.layoutIfNeeded()
+                self.timelineContainer.layoutIfNeeded()
+                self.calendarPage.view.layoutIfNeeded()
+            }, completion: { _ in
+                
+            })
         }
     }
     

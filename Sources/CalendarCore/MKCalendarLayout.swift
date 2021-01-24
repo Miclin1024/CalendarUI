@@ -13,10 +13,13 @@ public protocol MKCalendarLayout {
     func calendarTitle(_ calendar: MKCalendar, forDisplayState state: MKCalendar.DisplayState, selectedDays days: [Day]) -> String
     
     func edgeInset(forCalendarDisplayState state: MKCalendar.DisplayState) -> UIEdgeInsets
+    
+//    func calendarHeight(_ calendar: MKCalendar, forDisplayState state: MKCalendar.DisplayState, isTimelineHidden: Bool) -> CGFloat
+    
+    var timelineHuggingHeight: CGFloat { get }
 }
 
-extension MKCalendarLayout {
-    
+@objc public class MKCalendarDefaultLayout: NSObject, MKCalendarLayout {
     public func calendarTitle(_ calendar: MKCalendar, forDisplayState state: MKCalendar.DisplayState, selectedDays days: [Day]) -> String {
         let date = days.first?.date ?? Date()
         let formatter = DateFormatter()
@@ -28,6 +31,6 @@ extension MKCalendarLayout {
     public func edgeInset(forCalendarDisplayState state: MKCalendar.DisplayState) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
     }
+    
+    public var timelineHuggingHeight: CGFloat = UIScreen.main.bounds.height * 0.6
 }
-
-public class MKCalendarDefaultLayout: MKCalendarLayout { }

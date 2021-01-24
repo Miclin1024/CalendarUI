@@ -19,7 +19,8 @@ public protocol MKCalendarLayout {
     var timelineHuggingHeight: CGFloat { get }
 }
 
-@objc public class MKCalendarDefaultLayout: NSObject, MKCalendarLayout {
+public class MKCalendarDefaultLayout: MKCalendarLayout {
+    
     public func calendarTitle(_ calendar: MKCalendar, forDisplayState state: MKCalendar.DisplayState, selectedDays days: [Day]) -> String {
         let date = days.first?.date ?? Date()
         let formatter = DateFormatter()

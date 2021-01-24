@@ -12,9 +12,13 @@ open class MKCalendar: UIViewController {
     
     open weak var delegate: MKCalendarDelegate?
     
-    open weak var eventsProvider: EventsProvider?
+    open weak var eventsProvider: EventsProvider? {
+        didSet {
+            updateTimelineView()
+        }
+    }
     
-    @NSCopying open var layout: MKCalendarLayout = MKCalendarDefaultLayout()
+    open var layout: MKCalendarLayout = MKCalendarDefaultLayout()
     
     public var displayState: DisplayState {
         get {
@@ -173,7 +177,6 @@ open class MKCalendar: UIViewController {
     }
     
     func updateTimelineView() {
-        
         let selectedDate: Date = (selectedDays.first?.date ?? Date()).dateOnly(calendar: calendar)
         timeline.date = selectedDate
         let end = calendar.date(byAdding: .day, value: 1, to: selectedDate)!

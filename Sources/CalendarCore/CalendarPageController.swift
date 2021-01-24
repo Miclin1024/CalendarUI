@@ -235,7 +235,6 @@ extension CalendarPageController: MonthViewDelegate, WeekViewDelegate {
                 }
             }
         }
-
     }
     
     func deselectCells(withDay day: Day) {

@@ -32,13 +32,6 @@ class CalendarVC: UIViewController {
             redView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             redView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20)
         ])
-        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: { [self] in
-//
-//            let date = Date()
-//            let prevMonth = NSCalendar.current.date(byAdding: .month, value: -1, to: date)!
-//            self.calendar.transition(toDisplayState: .week(date: prevMonth), animated: true)
-//        })
     }
 }
 

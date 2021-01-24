@@ -16,9 +16,9 @@ open class MKCalendar: UIViewController {
     
     open var layout: MKCalendarLayout = MKCalendarDefaultLayout()
     
-    public var displayStatus: DisplayStatus {
+    public var displayState: DisplayState {
         get {
-            return calendarPage.displayStatus
+            return calendarPage.displayState
         }
     }
     
@@ -48,7 +48,7 @@ open class MKCalendar: UIViewController {
         return container
     }()
     
-    var calendarPage = MKCalendarPageVC(initialStatus: .month(date: Date()))
+    var calendarPage: CalendarPageController
     
     var calendarPageHeightConstraint: NSLayoutConstraint!
     
@@ -56,8 +56,19 @@ open class MKCalendar: UIViewController {
 
     var timelineContainerHeightConstraint: NSLayoutConstraint!
     
+    public init(initialState: DisplayState) {
+        super.init(nibName: nil, bundle: nil)
+        calendarPage = CalendarPageController(initialState: initialState)
+    }
+    
+    required public init?(coder: NSCoder) {
+        super.init(coder: coder)
+        calendarPage = CalendarPageController(initialState: .month(date: Date()))
+    }
+    
     open override func viewDidLoad() {
-        let contentPadding = layout.edgeInset(forCalendarDisplayStatus: .month(date: Date()))
+        let contentPadding = layout.edgeInset(forCalendarDisplayState: .month(date: Date()))
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = style.backgroundColor
         
         view.addSubview(headerView)
@@ -81,7 +92,7 @@ open class MKCalendar: UIViewController {
         let weekViewRowHeight: CGFloat = width / 7
         calendarPageHeightConstraint = calendarPage.view.heightAnchor.constraint(equalToConstant: weekViewRowHeight)
         calendarPageHeightConstraint.priority = .defaultLow
-        if case .week(_) = displayStatus {
+        if case .week(_) = displayState {
             calendarPageHeightConstraint.isActive = true
         }
         
@@ -95,7 +106,7 @@ open class MKCalendar: UIViewController {
         ])
         
         timelineContainerHeightConstraint = timelineContainer.heightAnchor.constraint(equalToConstant: 0)
-        if case .week(_) = displayStatus {
+        if case .week(_) = displayState {
             timelineContainerHeightConstraint.isActive = hideTimelineView
         } else {
             timelineContainerHeightConstraint.isActive = true
@@ -124,8 +135,14 @@ open class MKCalendar: UIViewController {
         view.backgroundColor = style.backgroundColor
     }
     
+    public func addCalendar(toParent parent: UIViewController) {
+        parent.addChild(self)
+        self.didMove(toParent: parent)
+        parent.view.addSubview(self.view)
+    }
+    
     func updateHeaderView() {
-        switch displayStatus {
+        switch displayState {
         case .month(let month):
             let endOfMonth = calendar.getLastDayInMonth(fromDate: month)!
             let range = month ... endOfMonth
@@ -142,7 +159,7 @@ open class MKCalendar: UIViewController {
             headerView.updateSymbolHighlight(usingDates: datesInCurrentWeek)
         }
         headerView.selectedDates = self.selectedDays.map {$0.date}
-        headerView.titleLabel.text = layout.calendarTitle(self, forDisplauyStatus: self.displayStatus, selectedDays: self.selectedDays)
+        headerView.titleLabel.text = layout.calendarTitle(self, forDisplayState: self.displayState, selectedDays: self.selectedDays)
     }
     
     func updateTimelineView() {
@@ -156,9 +173,9 @@ open class MKCalendar: UIViewController {
         
     }
     
-    func transition(toDisplayStatus status: DisplayStatus, animated: Bool) {
-        calendarPage.transition(toDisplayStatus: status, animated: animated)
-        if case .week(_) = status {
+    func transition(toDisplayState state: DisplayState, animated: Bool) {
+        calendarPage.transition(toDisplayState: state, animated: animated)
+        if case .week(_) = state {
             calendarPageHeightConstraint.isActive = true
             timelineContainerHeightConstraint.isActive = hideTimelineView
         } else {
@@ -172,7 +189,7 @@ open class MKCalendar: UIViewController {
         updateTimelineView()
     }
     
-    public enum DisplayStatus {
+    public enum DisplayState {
         case month(date: Date)
         case week(date: Date)
         

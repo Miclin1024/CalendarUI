@@ -8,13 +8,13 @@
 import Foundation
 import UIKit
 
-class MKCalendarPageVC: UIPageViewController {
+class CalendarPageController: UIPageViewController {
     
     let calendar = NSCalendar.current
     
     var selectedDays: [Day] = []
     
-    var displayStatus: MKCalendar.DisplayStatus
+    var displayState: MKCalendar.DisplayState
     
     private(set) var monthViews: [Date: MonthView<DayCell>] = [:]
     
@@ -24,8 +24,8 @@ class MKCalendarPageVC: UIPageViewController {
     
     var weekViewStyle: WeekViewStyle = WeekViewStyle()
     
-    init(initialStatus: MKCalendar.DisplayStatus) {
-        displayStatus = initialStatus
+    init(initialState: MKCalendar.DisplayState) {
+        displayState = initialState
         
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     }
@@ -41,13 +41,13 @@ class MKCalendarPageVC: UIPageViewController {
         dataSource = self
         delegate = self
         
-        let initialView = getViewController(fromDisplayStatus: self.displayStatus)
+        let initialView = getViewController(fromDisplayState: self.displayState)
         setViewControllers([initialView], direction: .forward, animated: false, completion: nil)
     }
     
-    private func getViewController(fromDisplayStatus status: MKCalendar.DisplayStatus) -> UIViewController {
+    private func getViewController(fromDisplayState state: MKCalendar.DisplayState) -> UIViewController {
         var vc: UIViewController
-        switch status {
+        switch state {
         case .month(let month):
             vc = getMonthView(forDate: month)
         case .week(let week):
@@ -104,11 +104,11 @@ class MKCalendarPageVC: UIPageViewController {
     
     // MARK: Transition
     
-    func transition(toDisplayStatus status: MKCalendar.DisplayStatus, animated: Bool) {
-        let vc = getViewController(fromDisplayStatus: status)
-        let dir: UIPageViewController.NavigationDirection = status.value().compare(self.displayStatus.value()) != .orderedAscending ? .forward : .reverse
+    func transition(toDisplayState state: MKCalendar.DisplayState, animated: Bool) {
+        let vc = getViewController(fromDisplayState: state)
+        let dir: UIPageViewController.NavigationDirection = state.value().compare(self.displayState.value()) != .orderedAscending ? .forward : .reverse
         self.setViewControllers([vc], direction: dir, animated: true, completion: { [weak self] _ in
-            self?.displayStatus = status
+            self?.displayState = state
             NotificationCenter.default.post(name: .didUpdateCalendar, object: nil)
         })
     }
@@ -129,9 +129,9 @@ class MKCalendarPageVC: UIPageViewController {
     }
 }
 
-extension MKCalendarPageVC: UIPageViewControllerDataSource {
+extension CalendarPageController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        switch displayStatus {
+        switch displayState {
         case .month:
             let vc = viewController as! MonthView
             let date = calendar.date(byAdding: .month, value: -1, to: vc.month)!
@@ -144,7 +144,7 @@ extension MKCalendarPageVC: UIPageViewControllerDataSource {
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        switch displayStatus {
+        switch displayState {
         case .month:
             let vc = viewController as! MonthView
             let date = calendar.date(byAdding: .month, value: 1, to: vc.month)!
@@ -157,22 +157,22 @@ extension MKCalendarPageVC: UIPageViewControllerDataSource {
     }
 }
 
-extension MKCalendarPageVC: UIPageViewControllerDelegate {
+extension CalendarPageController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
 
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         if let monthView = self.viewControllers?.first as? MonthView {
-            displayStatus = .month(date: monthView.month)
+            displayState = .month(date: monthView.month)
         } else if let weekView = self.viewControllers?.first as? WeekView {
-            displayStatus = .week(date: weekView.week)
+            displayState = .week(date: weekView.week)
         }
         NotificationCenter.default.post(name: .didUpdateCalendar, object: nil)
     }
 }
 
-extension MKCalendarPageVC: MonthViewDelegate, WeekViewDelegate {
+extension CalendarPageController: MonthViewDelegate, WeekViewDelegate {
     func monthView(_ monthView: MonthView<DayCell>, willSelectDay day: Day, at indexPath: IndexPath) {
         if selectedDays.count != 0 && !monthView.style.allowMultipleSelection {
             selectedDays.forEach { day in

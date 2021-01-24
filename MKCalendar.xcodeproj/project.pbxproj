@@ -38,6 +38,13 @@
 		1AED8A4725BD1BD600015550 /* SnapTo15MinuteIntervals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AED8A4625BD1BD600015550 /* SnapTo15MinuteIntervals.swift */; };
 		1AED8A4A25BD1BEB00015550 /* EventResizeHandleDotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AED8A4925BD1BEB00015550 /* EventResizeHandleDotView.swift */; };
 		1AED8A4D25BD1C0A00015550 /* MKCalendarLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AED8A4C25BD1C0A00015550 /* MKCalendarLayout.swift */; };
+		1AED8A5A25BD5F3900015550 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AED8A5925BD5F3900015550 /* AppDelegate.swift */; };
+		1AED8A5C25BD5F3900015550 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AED8A5B25BD5F3900015550 /* SceneDelegate.swift */; };
+		1AED8A5E25BD5F3900015550 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AED8A5D25BD5F3900015550 /* ViewController.swift */; };
+		1AED8A6125BD5F3900015550 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1AED8A5F25BD5F3900015550 /* Main.storyboard */; };
+		1AED8A6325BD5F3C00015550 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AED8A6225BD5F3C00015550 /* Assets.xcassets */; };
+		1AED8A6625BD5F3C00015550 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1AED8A6425BD5F3C00015550 /* LaunchScreen.storyboard */; };
+		1AED8A7A25BD611900015550 /* MKCalendar.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AED8A6F25BD60A200015550 /* MKCalendar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,10 +80,26 @@
 		1AED8A4625BD1BD600015550 /* SnapTo15MinuteIntervals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapTo15MinuteIntervals.swift; sourceTree = "<group>"; };
 		1AED8A4925BD1BEB00015550 /* EventResizeHandleDotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventResizeHandleDotView.swift; sourceTree = "<group>"; };
 		1AED8A4C25BD1C0A00015550 /* MKCalendarLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKCalendarLayout.swift; sourceTree = "<group>"; };
+		1AED8A5725BD5F3900015550 /* MKCalendarDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MKCalendarDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1AED8A5925BD5F3900015550 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		1AED8A5B25BD5F3900015550 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		1AED8A5D25BD5F3900015550 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		1AED8A6025BD5F3900015550 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		1AED8A6225BD5F3C00015550 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1AED8A6525BD5F3C00015550 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1AED8A6725BD5F3C00015550 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1AED8A6F25BD60A200015550 /* MKCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKCalendar.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		1AED89DC25BD159400015550 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1AED8A5425BD5F3900015550 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -90,6 +113,7 @@
 			isa = PBXGroup;
 			children = (
 				1AED89ED25BD16B100015550 /* Sources */,
+				1AED8A5825BD5F3900015550 /* MKCalendarDemo */,
 				1AED89E025BD159400015550 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -98,6 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				1AED89DF25BD159400015550 /* MKCalendar.framework */,
+				1AED8A5725BD5F3900015550 /* MKCalendarDemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -105,6 +130,7 @@
 		1AED89ED25BD16B100015550 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				1AED8A6F25BD60A200015550 /* MKCalendar.h */,
 				1AED89F025BD16F000015550 /* Timeline */,
 				1AED89EF25BD16E200015550 /* Extensions */,
 				1AED89EE25BD16C600015550 /* CalendarCore */,
@@ -164,13 +190,39 @@
 			path = Timeline;
 			sourceTree = "<group>";
 		};
+		1AED8A5825BD5F3900015550 /* MKCalendarDemo */ = {
+			isa = PBXGroup;
+			children = (
+				1AED8A5925BD5F3900015550 /* AppDelegate.swift */,
+				1AED8A5B25BD5F3900015550 /* SceneDelegate.swift */,
+				1AED8A5D25BD5F3900015550 /* ViewController.swift */,
+				1AED8A5F25BD5F3900015550 /* Main.storyboard */,
+				1AED8A6225BD5F3C00015550 /* Assets.xcassets */,
+				1AED8A6425BD5F3C00015550 /* LaunchScreen.storyboard */,
+				1AED8A6725BD5F3C00015550 /* Info.plist */,
+			);
+			path = MKCalendarDemo;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		1AED8A7925BD611600015550 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1AED8A7A25BD611900015550 /* MKCalendar.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		1AED89DE25BD159400015550 /* MKCalendar */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1AED89E725BD159400015550 /* Build configuration list for PBXNativeTarget "MKCalendar" */;
 			buildPhases = (
+				1AED8A7925BD611600015550 /* Headers */,
 				1AED89DB25BD159400015550 /* Sources */,
 				1AED89DC25BD159400015550 /* Frameworks */,
 				1AED89DD25BD159400015550 /* Resources */,
@@ -184,17 +236,38 @@
 			productReference = 1AED89DF25BD159400015550 /* MKCalendar.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		1AED8A5625BD5F3900015550 /* MKCalendarDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1AED8A6825BD5F3C00015550 /* Build configuration list for PBXNativeTarget "MKCalendarDemo" */;
+			buildPhases = (
+				1AED8A5325BD5F3900015550 /* Sources */,
+				1AED8A5425BD5F3900015550 /* Frameworks */,
+				1AED8A5525BD5F3900015550 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MKCalendarDemo;
+			productName = MKCalendarDemo;
+			productReference = 1AED8A5725BD5F3900015550 /* MKCalendarDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		1AED89D625BD159400015550 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1230;
 				LastUpgradeCheck = 1230;
 				TargetAttributes = {
 					1AED89DE25BD159400015550 = {
 						CreatedOnToolsVersion = 12.3;
 						LastSwiftMigration = 1230;
+					};
+					1AED8A5625BD5F3900015550 = {
+						CreatedOnToolsVersion = 12.3;
 					};
 				};
 			};
@@ -212,6 +285,7 @@
 			projectRoot = "";
 			targets = (
 				1AED89DE25BD159400015550 /* MKCalendar */,
+				1AED8A5625BD5F3900015550 /* MKCalendarDemo */,
 			);
 		};
 /* End PBXProject section */
@@ -221,6 +295,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1AED8A5525BD5F3900015550 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1AED8A6625BD5F3C00015550 /* LaunchScreen.storyboard in Resources */,
+				1AED8A6325BD5F3C00015550 /* Assets.xcassets in Resources */,
+				1AED8A6125BD5F3900015550 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,7 +349,36 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1AED8A5325BD5F3900015550 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1AED8A5E25BD5F3900015550 /* ViewController.swift in Sources */,
+				1AED8A5A25BD5F3900015550 /* AppDelegate.swift in Sources */,
+				1AED8A5C25BD5F3900015550 /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		1AED8A5F25BD5F3900015550 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1AED8A6025BD5F3900015550 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		1AED8A6425BD5F3C00015550 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1AED8A6525BD5F3C00015550 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		1AED89E525BD159400015550 /* Debug */ = {
@@ -320,7 +433,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -378,7 +491,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -402,6 +515,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = MKCalendar.xcodeproj/MKCalendar_Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -429,6 +543,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = MKCalendar.xcodeproj/MKCalendar_Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -438,6 +553,46 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		1AED8A6925BD5F3C00015550 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 55BUFERA4K;
+				INFOPLIST_FILE = MKCalendarDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = cc.miclin.MKCalendarDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		1AED8A6A25BD5F3C00015550 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 55BUFERA4K;
+				INFOPLIST_FILE = MKCalendarDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = cc.miclin.MKCalendarDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -460,6 +615,15 @@
 			buildConfigurations = (
 				1AED89E825BD159400015550 /* Debug */,
 				1AED89E925BD159400015550 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1AED8A6825BD5F3C00015550 /* Build configuration list for PBXNativeTarget "MKCalendarDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1AED8A6925BD5F3C00015550 /* Debug */,
+				1AED8A6A25BD5F3C00015550 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

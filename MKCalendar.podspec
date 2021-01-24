@@ -6,9 +6,6 @@ Pod::Spec.new do |spec|
   spec.version      = "0.0.1"
   spec.swift_version = ["5.1", "5.2", "5.3"]
   spec.summary      = "A customizable calendar framework for iOS"
-  spec.description  = <<-DESC
-Work in progress
-						DESC
 
   spec.homepage     = "https://github.com/Miclin1024/MKCalendar/"
 

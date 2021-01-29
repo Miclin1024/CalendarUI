@@ -13,8 +13,8 @@ Pod::Spec.new do |spec|
 
   spec.author             = { "Michael Lin" => "miclin@berkeley.edu" }
 
-  spec.platform     = :ios, "10.0"
-  spec.ios.deployment_target = "10.0"
+  spec.platform     = :ios, "12.0"
+  spec.ios.deployment_target = "12.0"
 
   spec.source       = { :git => "https://github.com/Miclin1024/MKCalendar.git", :tag => spec.version.to_s }
   spec.source_files  = "Sources/**/*.swift"

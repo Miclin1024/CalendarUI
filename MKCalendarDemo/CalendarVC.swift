@@ -27,13 +27,13 @@ class CalendarVC: UIViewController {
     @IBAction func toWeek(_ sender: Any) {
         let date = Date()
         let state = MKCalendar.DisplayState.week(date: date)
-        calendar.transition(toDisplayState: state, animated: true)
+        calendar.transition(toDisplayState: state, animated: true, completion: nil)
     }
     
     @IBAction func toMonth(_ sender: Any) {
         let date = Date()
         let state = MKCalendar.DisplayState.month(date: date)
-        calendar.transition(toDisplayState: state, animated: true)
+        calendar.transition(toDisplayState: state, animated: true, completion: nil)
     }
     
     @IBAction func toggleTimeline(_ sender: Any) {

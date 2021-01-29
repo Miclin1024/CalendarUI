@@ -13,7 +13,7 @@ protocol CalendarPageEventHandler: class {
     func calendarPage(didDeselectDays days: [Day])
 }
 
-class CalendarPageController: UIPageViewController {
+public class CalendarPageController: UIPageViewController {
     
     let calendar = NSCalendar.current
     
@@ -22,6 +22,8 @@ class CalendarPageController: UIPageViewController {
     var selectedDays: [Day] = []
     
     var displayState: MKCalendar.DisplayState
+    
+    var transitionDuration: CFTimeInterval = 0.5
     
     private(set) var monthViews: [Date: MonthView<DayCell>] = [:]
     
@@ -41,7 +43,7 @@ class CalendarPageController: UIPageViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -139,7 +141,7 @@ class CalendarPageController: UIPageViewController {
 // MARK: PageViewController Data Source
 
 extension CalendarPageController: UIPageViewControllerDataSource {
-    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+    public func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         switch displayState {
         case .month:
             let vc = viewController as! MonthView
@@ -152,7 +154,7 @@ extension CalendarPageController: UIPageViewControllerDataSource {
         }
     }
     
-    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+    public func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         switch displayState {
         case .month:
             let vc = viewController as! MonthView
@@ -169,11 +171,11 @@ extension CalendarPageController: UIPageViewControllerDataSource {
 // MARK: PageViewController Delegate
 
 extension CalendarPageController: UIPageViewControllerDelegate {
-    func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
+    public func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
 
     }
     
-    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+    public func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         if let monthView = self.viewControllers?.first as? MonthView {
             displayState = .month(date: monthView.month)
         } else if let weekView = self.viewControllers?.first as? WeekView {
@@ -184,7 +186,7 @@ extension CalendarPageController: UIPageViewControllerDelegate {
 }
 
 extension CalendarPageController: MonthViewDelegate, WeekViewDelegate {
-    func monthView(_ monthView: MonthView<DayCell>, willSelectDay day: Day, at indexPath: IndexPath) {
+    public func monthView(_ monthView: MonthView<DayCell>, willSelectDay day: Day, at indexPath: IndexPath) {
         var deselectedDays: [Day] = []
         if selectedDays.count != 0 && !monthView.style.allowMultipleSelection {
             selectedDays.forEach { day in
@@ -202,14 +204,14 @@ extension CalendarPageController: MonthViewDelegate, WeekViewDelegate {
         handler?.calendarPage(didSelectDay: day)
     }
     
-    func monthView(_ monthView: MonthView<DayCell>, willDeselectDay day: Day, at indexPath: IndexPath) {
+    public func monthView(_ monthView: MonthView<DayCell>, willDeselectDay day: Day, at indexPath: IndexPath) {
         selectedDays.removeAll(where: {day == $0})
         self.deselectCells(withDay: day)
         NotificationCenter.default.post(name: .didUpdateCalendar, object: nil)
         handler?.calendarPage(didDeselectDays: [day])
     }
     
-    func weekView(_ weekView: WeekView<DayCell>, willSelectDay day: Day, at indexPath: IndexPath) {
+    public func weekView(_ weekView: WeekView<DayCell>, willSelectDay day: Day, at indexPath: IndexPath) {
         var deselectedDays: [Day] = []
         if selectedDays.count != 0 {
             selectedDays.forEach { day in
@@ -227,7 +229,7 @@ extension CalendarPageController: MonthViewDelegate, WeekViewDelegate {
         handler?.calendarPage(didSelectDay: day)
     }
     
-    func weekView(_ weekView: WeekView<DayCell>, willDeselectDay day: Day, at indexPath: IndexPath) {
+    public func weekView(_ weekView: WeekView<DayCell>, willDeselectDay day: Day, at indexPath: IndexPath) {
         selectedDays.removeAll(where: {day == $0})
         self.deselectCells(withDay: day)
         NotificationCenter.default.post(name: .didUpdateCalendar, object: nil)

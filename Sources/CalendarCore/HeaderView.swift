@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class HeaderView: UIView {
+public class HeaderView: UIView {
     
     let calendar = NSCalendar.current
     

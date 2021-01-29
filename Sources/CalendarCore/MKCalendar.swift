@@ -42,21 +42,27 @@ public class MKCalendar: UIViewController {
         }
     }
     
+    public var transitionDuration: CFTimeInterval = 0.5 {
+        didSet {
+            calendarPage.transitionDuration = self.transitionDuration
+        }
+    }
+    
+    public var headerView: HeaderView = HeaderView()
+    
+    public var timeline: TimelineView = TimelineView()
+    
+    public var calendarPage: CalendarPageController
+    
     var style: MKCalendarStyle = MKCalendarStyle()
     
     var calendar = NSCalendar.current
-    
-    var headerView: HeaderView = HeaderView()
-    
-    var timeline: TimelineView = TimelineView()
     
     lazy var timelineContainer: TimelineContainer = {
         let container = TimelineContainer(timeline)
         container.addSubview(timeline)
         return container
     }()
-    
-    var calendarPage: CalendarPageController
     
     var calendarPageHeightConstraint: NSLayoutConstraint!
     
@@ -199,7 +205,7 @@ public class MKCalendar: UIViewController {
         }
     }
     
-    public func transition(toDisplayState state: DisplayState, animated: Bool) {
+    public func transition(toDisplayState state: DisplayState, animated: Bool, completion: ((Bool)->Void)?) {
         self.calendarPage.transition(toDisplayState: state, animated: animated)
         let contentPadding = layout.edgeInset(forCalendarDisplayState: .month(date: Date()))
         let width = view.bounds.inset(by: contentPadding).width
@@ -212,14 +218,12 @@ public class MKCalendar: UIViewController {
             calendarPageHeightConstraint.constant = weekViewRowHeight * 6
         }
         if animated {
-            UIView.animate(withDuration: 0.5, animations: {
+            UIView.animate(withDuration: transitionDuration, animations: {
                 self.view.layoutIfNeeded()
                 self.view.superview?.layoutIfNeeded()
                 self.timelineContainer.layoutIfNeeded()
                 self.calendarPage.view.layoutIfNeeded()
-            }, completion: { _ in
-                
-            })
+            }, completion: completion)
         }
     }
     

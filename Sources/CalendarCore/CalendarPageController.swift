@@ -8,9 +8,16 @@
 import Foundation
 import UIKit
 
+protocol CalendarPageEventHandler: class {
+    func calendarPage(didSelectDay day: Day)
+    func calendarPage(didDeselectDays days: [Day])
+}
+
 class CalendarPageController: UIPageViewController {
     
     let calendar = NSCalendar.current
+    
+    weak var handler: CalendarPageEventHandler?
     
     var selectedDays: [Day] = []
     
@@ -178,39 +185,53 @@ extension CalendarPageController: UIPageViewControllerDelegate {
 
 extension CalendarPageController: MonthViewDelegate, WeekViewDelegate {
     func monthView(_ monthView: MonthView<DayCell>, willSelectDay day: Day, at indexPath: IndexPath) {
+        var deselectedDays: [Day] = []
         if selectedDays.count != 0 && !monthView.style.allowMultipleSelection {
             selectedDays.forEach { day in
                 self.deselectCells(withDay: day)
+                deselectedDays.append(day)
             }
             selectedDays.removeAll()
         }
         selectedDays.append(day)
         self.selectCellInWeekViews(withDay: day, animated: false)
         NotificationCenter.default.post(name: .didUpdateCalendar, object: nil)
+        if selectedDays.count != 0 {
+            handler?.calendarPage(didDeselectDays: deselectedDays)
+        }
+        handler?.calendarPage(didSelectDay: day)
     }
     
     func monthView(_ monthView: MonthView<DayCell>, willDeselectDay day: Day, at indexPath: IndexPath) {
         selectedDays.removeAll(where: {day == $0})
         self.deselectCells(withDay: day)
         NotificationCenter.default.post(name: .didUpdateCalendar, object: nil)
+        handler?.calendarPage(didDeselectDays: [day])
     }
     
     func weekView(_ weekView: WeekView<DayCell>, willSelectDay day: Day, at indexPath: IndexPath) {
+        var deselectedDays: [Day] = []
         if selectedDays.count != 0 {
             selectedDays.forEach { day in
                 self.deselectCells(withDay: day)
+                deselectedDays.append(day)
             }
             selectedDays.removeAll()
         }
         selectedDays.append(day)
         self.selectCellInMonthViews(withDay: day, animated: false)
         NotificationCenter.default.post(name: .didUpdateCalendar, object: nil)
+        if deselectedDays.count != 0 {
+            handler?.calendarPage(didDeselectDays: deselectedDays)
+        }
+        handler?.calendarPage(didSelectDay: day)
     }
     
     func weekView(_ weekView: WeekView<DayCell>, willDeselectDay day: Day, at indexPath: IndexPath) {
         selectedDays.removeAll(where: {day == $0})
         self.deselectCells(withDay: day)
         NotificationCenter.default.post(name: .didUpdateCalendar, object: nil)
+        handler?.calendarPage(didDeselectDays: [day])
     }
     
     func selectCellInWeekViews(withDay day: Day, animated: Bool) {

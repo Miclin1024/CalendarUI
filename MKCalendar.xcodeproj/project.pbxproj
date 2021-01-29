@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A75A5EE25C4319B0075E602 /* MKCalendar.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 1A75A5ED25C4319A0075E602 /* MKCalendar.podspec */; };
 		1AED89F225BD16FF00015550 /* MKCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AED89F125BD16FF00015550 /* MKCalendar.swift */; };
 		1AED89F525BD172E00015550 /* CalendarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AED89F425BD172E00015550 /* CalendarStyle.swift */; };
 		1AED89F825BD176700015550 /* EventDescriptor+DateTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AED89F725BD176700015550 /* EventDescriptor+DateTools.swift */; };
@@ -48,6 +49,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A75A5ED25C4319A0075E602 /* MKCalendar.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MKCalendar.podspec; sourceTree = "<group>"; };
 		1AED89DF25BD159400015550 /* MKCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MKCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AED89F125BD16FF00015550 /* MKCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKCalendar.swift; sourceTree = "<group>"; };
 		1AED89F425BD172E00015550 /* CalendarStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarStyle.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 		1AED89D525BD159400015550 = {
 			isa = PBXGroup;
 			children = (
+				1A75A5ED25C4319A0075E602 /* MKCalendar.podspec */,
 				1AED89ED25BD16B100015550 /* Sources */,
 				1AED8A5825BD5F3900015550 /* MKCalendarDemo */,
 				1AED89E025BD159400015550 /* Products */,
@@ -295,6 +298,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A75A5EE25C4319B0075E602 /* MKCalendar.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

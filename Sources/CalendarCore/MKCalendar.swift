@@ -8,17 +8,17 @@
 import Foundation
 import UIKit
 
-open class MKCalendar: UIViewController {
+public class MKCalendar: UIViewController {
     
-    open weak var delegate: MKCalendarDelegate?
+    public weak var delegate: MKCalendarDelegate?
     
-    open weak var eventsProvider: EventsProvider? {
+    public weak var eventsProvider: EventsProvider? {
         didSet {
             updateTimelineView()
         }
     }
     
-    open var layout: MKCalendarLayout = MKCalendarDefaultLayout()
+    public var layout: MKCalendarLayout = MKCalendarDefaultLayout()
     
     public var displayState: DisplayState {
         get {
@@ -74,7 +74,7 @@ open class MKCalendar: UIViewController {
         super.init(coder: coder)
     }
     
-    open override func viewDidLoad() {
+    public override func viewDidLoad() {
         let contentPadding = layout.edgeInset(forCalendarDisplayState: .month(date: Date()))
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = style.backgroundColor
@@ -89,6 +89,7 @@ open class MKCalendar: UIViewController {
         addChild(calendarPage)
         calendarPage.didMove(toParent: self)
         view.addSubview(calendarPage.view)
+        calendarPage.handler = self
         headerPaddingConstraint = calendarPage.view.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: style.headerBottomPadding)
         NSLayoutConstraint.activate([
             headerPaddingConstraint,
@@ -121,7 +122,7 @@ open class MKCalendar: UIViewController {
         } else {
             timelineContainerHeightConstraint = timelineContainer.heightAnchor.constraint(equalToConstant: 0)
         }
-//        timelineContainerHeightConstraint.priority = .defaultHigh
+
         timelineContainerHeightConstraint.isActive = true
         
         updateHeaderView()
@@ -129,7 +130,7 @@ open class MKCalendar: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveCalendarUpdate(_:)), name: .didUpdateCalendar, object: nil)
     }
 
-    open override func viewDidLayoutSubviews() {
+    public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         timelineContainer.contentSize = timeline.frame.size
     }
@@ -242,9 +243,19 @@ open class MKCalendar: UIViewController {
     }
 }
 
+extension MKCalendar: CalendarPageEventHandler {
+    func calendarPage(didSelectDay day: Day) {
+        delegate?.calendar(self, didSelectDate: day.date)
+    }
+    
+    func calendarPage(didDeselectDays days: [Day]) {
+        delegate?.calendar(self, didDeselectDates: days.map{ $0.date })
+    }
+}
+
 public protocol MKCalendarDelegate: class {
-    func calendar(_ calendar: MKCalendar, willSelectDate: Date)
-    func calendar(_ calendar: MKCalendar, willDeselectDates: [Date])
+    func calendar(_ calendar: MKCalendar, didSelectDate date: Date)
+    func calendar(_ calendar: MKCalendar, didDeselectDates dates: [Date])
 }
 
 enum SelectionMode {

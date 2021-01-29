@@ -21,23 +21,29 @@ class CalendarVC: UIViewController {
             calendar.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
         calendar.eventsProvider = self
-        
-        let redView = UIView()
-        redView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(redView)
-        redView.backgroundColor = .red
-        NSLayoutConstraint.activate([
-            redView.topAnchor.constraint(equalTo: calendar.view.bottomAnchor, constant: 20),
-            redView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            redView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            redView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20)
-        ])
+        calendar.delegate = self
+    }
+    
+    @IBAction func toWeek(_ sender: Any) {
+        let date = Date()
+        let state = MKCalendar.DisplayState.week(date: date)
+        calendar.transition(toDisplayState: state, animated: true)
+    }
+    
+    @IBAction func toMonth(_ sender: Any) {
+        let date = Date()
+        let state = MKCalendar.DisplayState.month(date: date)
+        calendar.transition(toDisplayState: state, animated: true)
+    }
+    
+    @IBAction func toggleTimeline(_ sender: Any) {
+        calendar.setHideTimelineView(!calendar.hideTimelineView, animated: true)
     }
 }
 
 extension CalendarVC: EventsProvider {
     func calendar(_ calendar: MKCalendar, eventsForDate date: Date) -> [EventDescriptor] {
-        let now = date
+        let now = Date()
         let event1 = Event(startDate: now, endDate: NSCalendar.current.date(byAdding: .hour, value: 2, to: now)!, text: "Event 1")
         event1.backgroundColor = .cyan
         let event2 = Event(startDate: NSCalendar.current.date(byAdding: .minute, value: 30, to: now)!, endDate: NSCalendar.current.date(byAdding: .hour, value: 1, to: now)!, text: "Event 2")
@@ -45,6 +51,20 @@ extension CalendarVC: EventsProvider {
         let event3 = Event(startDate: NSCalendar.current.date(byAdding: .hour, value: 1, to: now)!, endDate: NSCalendar.current.date(byAdding: .hour, value: 4, to: now)!, text: "Event 3")
         return [event1, event2, event3]
     }
+}
+
+extension CalendarVC: MKCalendarDelegate {
+    func calendar(_ calendar: MKCalendar, didSelectDate date: Date) {
+        print("Selected date \(date)")
+    }
+    
+    func calendar(_ calendar: MKCalendar, didDeselectDates dates: [Date]) {
+        print("Deselected dates \(dates)")
+    }
+    
+
+
+    
 }
 
 class Event: EventDescriptor {

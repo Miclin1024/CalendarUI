@@ -3,7 +3,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "MKCalendar"
-  spec.version      = "0.0.2"
+  spec.version      = "0.0.3"
   spec.swift_version = ["5.1", "5.2", "5.3"]
   spec.summary      = "A customizable calendar framework for iOS"
 

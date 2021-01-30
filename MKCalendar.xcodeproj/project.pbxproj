@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1A75A5EE25C4319B0075E602 /* MKCalendar.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 1A75A5ED25C4319A0075E602 /* MKCalendar.podspec */; };
+		1A75A61F25C512AC0075E602 /* CalendarState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A75A61E25C512AC0075E602 /* CalendarState.swift */; };
 		1AED89F225BD16FF00015550 /* MKCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AED89F125BD16FF00015550 /* MKCalendar.swift */; };
 		1AED89F525BD172E00015550 /* CalendarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AED89F425BD172E00015550 /* CalendarStyle.swift */; };
 		1AED89F825BD176700015550 /* EventDescriptor+DateTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AED89F725BD176700015550 /* EventDescriptor+DateTools.swift */; };
@@ -50,6 +51,7 @@
 
 /* Begin PBXFileReference section */
 		1A75A5ED25C4319A0075E602 /* MKCalendar.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MKCalendar.podspec; sourceTree = "<group>"; };
+		1A75A61E25C512AC0075E602 /* CalendarState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarState.swift; sourceTree = "<group>"; };
 		1AED89DF25BD159400015550 /* MKCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MKCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AED89F125BD16FF00015550 /* MKCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKCalendar.swift; sourceTree = "<group>"; };
 		1AED89F425BD172E00015550 /* CalendarStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarStyle.swift; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 				1AED8A2225BD1A4A00015550 /* DayCell.swift */,
 				1AED8A2525BD1A6D00015550 /* Day.swift */,
 				1AED8A4C25BD1C0A00015550 /* MKCalendarLayout.swift */,
+				1A75A61E25C512AC0075E602 /* CalendarState.swift */,
 			);
 			path = CalendarCore;
 			sourceTree = "<group>";
@@ -328,6 +331,7 @@
 				1AED8A2F25BD1AFE00015550 /* AllDayView.swift in Sources */,
 				1AED8A1D25BD1A0200015550 /* CalendarPageController.swift in Sources */,
 				1AED89FE25BD179E00015550 /* Value+Clamped.swift in Sources */,
+				1A75A61F25C512AC0075E602 /* CalendarState.swift in Sources */,
 				1AED8A4725BD1BD600015550 /* SnapTo15MinuteIntervals.swift in Sources */,
 				1AED8A1125BD189400015550 /* EventProvider.swift in Sources */,
 				1AED89F225BD16FF00015550 /* MKCalendar.swift in Sources */,

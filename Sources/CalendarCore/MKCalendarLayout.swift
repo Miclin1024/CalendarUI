@@ -10,9 +10,9 @@ import UIKit
 
 public protocol MKCalendarLayout {
     
-    func calendarTitle(_ calendar: MKCalendar, forDisplayState state: MKCalendar.DisplayState, selectedDays days: [Day]) -> String
+    func calendarTitle(_ calendar: MKCalendar, forCalendarState state: CalendarState, selectedDays days: [Day]) -> String
     
-    func edgeInset(forCalendarDisplayState state: MKCalendar.DisplayState) -> UIEdgeInsets
+    func edgeInset(forCalendarState state: CalendarState) -> UIEdgeInsets
     
 //    func calendarHeight(_ calendar: MKCalendar, forDisplayState state: MKCalendar.DisplayState, isTimelineHidden: Bool) -> CGFloat
     
@@ -21,7 +21,7 @@ public protocol MKCalendarLayout {
 
 public class MKCalendarDefaultLayout: MKCalendarLayout {
     
-    public func calendarTitle(_ calendar: MKCalendar, forDisplayState state: MKCalendar.DisplayState, selectedDays days: [Day]) -> String {
+    public func calendarTitle(_ calendar: MKCalendar, forCalendarState state: CalendarState, selectedDays days: [Day]) -> String {
         let date = days.first?.date ?? Date()
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
@@ -29,7 +29,7 @@ public class MKCalendarDefaultLayout: MKCalendarLayout {
         return formatter.string(from: date)
     }
     
-    public func edgeInset(forCalendarDisplayState state: MKCalendar.DisplayState) -> UIEdgeInsets {
+    public func edgeInset(forCalendarState state: CalendarState) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
     }
     

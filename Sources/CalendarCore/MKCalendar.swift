@@ -20,9 +20,9 @@ public class MKCalendar: UIViewController {
     
     public var layout: MKCalendarLayout = MKCalendarDefaultLayout()
     
-    public var displayState: DisplayState {
+    public var calendarState: CalendarState {
         get {
-            return calendarPage.displayState
+            return calendarPage.calendarState
         }
     }
     
@@ -34,7 +34,7 @@ public class MKCalendar: UIViewController {
     
     public var hideTimelineView: Bool = false {
         didSet{
-            if case .week = displayState, !hideTimelineView {
+            if case .week = calendarState.mode, !hideTimelineView {
                 timelineContainerHeightConstraint.constant = layout.timelineHuggingHeight
             } else {
                 timelineContainerHeightConstraint.constant = 0
@@ -70,19 +70,18 @@ public class MKCalendar: UIViewController {
 
     var timelineContainerHeightConstraint: NSLayoutConstraint!
     
-    public init(initialState: DisplayState = .month(date: Date())) {
-        let normalizedInitialDate = initialState.normalized()
-        calendarPage = CalendarPageController(initialState: normalizedInitialDate)
+    public init(initialState state: CalendarState) {
+        calendarPage = CalendarPageController(initialState: state)
         super.init(nibName: nil, bundle: nil)
     }
     
     required public init?(coder: NSCoder) {
-        calendarPage = CalendarPageController(initialState: DisplayState.month(date: Date()).normalized())
+        calendarPage = CalendarPageController(initialState: CalendarState(mode: .month, date: Date()))
         super.init(coder: coder)
     }
     
     public override func viewDidLoad() {
-        let contentPadding = layout.edgeInset(forCalendarDisplayState: .month(date: Date()))
+        let contentPadding = layout.edgeInset(forCalendarState: calendarState)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = style.backgroundColor
         
@@ -107,7 +106,7 @@ public class MKCalendar: UIViewController {
         let width = view.bounds.inset(by: contentPadding).width
         let weekViewRowHeight: CGFloat = width / 7
         var calendarPageHeight: CGFloat
-        if case .week = displayState {
+        if case .week = calendarState.mode {
             calendarPageHeight = weekViewRowHeight
         } else {
             calendarPageHeight = weekViewRowHeight * 6
@@ -124,7 +123,7 @@ public class MKCalendar: UIViewController {
             timelineContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-        if case .week = displayState, !hideTimelineView {
+        if case .week = calendarState.mode, !hideTimelineView {
             timelineContainerHeightConstraint = timelineContainer.heightAnchor.constraint(equalToConstant: layout.timelineHuggingHeight)
         } else {
             timelineContainerHeightConstraint = timelineContainer.heightAnchor.constraint(equalToConstant: 0)
@@ -164,15 +163,17 @@ public class MKCalendar: UIViewController {
     // MARK: Calendar Subviews Update
     
     func updateHeaderView() {
-        switch displayState {
-        case .month(let month):
+        switch calendarState.mode {
+        case .month:
+            let month = calendarState.date
             let endOfMonth = calendar.getLastDayInMonth(fromDate: month)!
             let range = month ... endOfMonth
             let datesInCurrentMonth = selectedDays.compactMap { (day : Day) -> Date? in
                 range.contains(day.date) ? day.date : nil
             }
             headerView.updateSymbolHighlight(usingDates: datesInCurrentMonth)
-        case .week(let week):
+        case .week:
+            let week = calendarState.date
             let endOfWeek = calendar.getLastDayOfWeek(fromDate: week)!
             let range = week ... endOfWeek
             let datesInCurrentWeek = selectedDays.compactMap { (day: Day) -> Date? in
@@ -181,7 +182,7 @@ public class MKCalendar: UIViewController {
             headerView.updateSymbolHighlight(usingDates: datesInCurrentWeek)
         }
         headerView.selectedDates = self.selectedDays.map {$0.date}
-        headerView.titleLabel.text = layout.calendarTitle(self, forDisplayState: self.displayState, selectedDays: self.selectedDays)
+        headerView.titleLabel.text = layout.calendarTitle(self, forCalendarState: calendarState, selectedDays: selectedDays)
     }
     
     func updateTimelineView() {
@@ -206,13 +207,19 @@ public class MKCalendar: UIViewController {
         }
     }
     
-    public func transition(toDisplayState state: DisplayState, animated: Bool, completion: ((Bool)->Void)?) {
-        let stateNormalized = state.normalized()
-        self.calendarPage.transition(toDisplayState: stateNormalized, animated: animated)
-        let contentPadding = layout.edgeInset(forCalendarDisplayState: DisplayState.month(date: Date()).normalized())
+    public func transition(toCalendarState state: CalendarState, animated: Bool, completion: ((Bool)->Void)?) {
+        
+        guard calendarState != state else {
+            completion?(true)
+            return
+        }
+        
+        self.calendarState.isTransitioning = true
+        self.calendarPage.transition(toCalendarState: state, animated: true)
+        let contentPadding = layout.edgeInset(forCalendarState: state)
         let width = view.bounds.inset(by: contentPadding).width
         let weekViewRowHeight: CGFloat = width / 7
-        if case .week(_) = state {
+        if case .week = state.mode {
             timelineContainerHeightConstraint.constant = hideTimelineView ? 0 : layout.timelineHuggingHeight
             calendarPageHeightConstraint.constant = weekViewRowHeight
         } else {
@@ -233,31 +240,6 @@ public class MKCalendar: UIViewController {
         updateHeaderView()
         updateTimelineView()
     }
-    
-    public enum DisplayState {
-        case month(date: Date)
-        case week(date: Date)
-        
-        func value() -> Date {
-            switch self {
-            case .month(let date):
-                return date
-            case .week(let date):
-                return date
-            }
-        }
-        
-        func normalized() -> DisplayState {
-            switch self {
-            case .month(let date):
-                let month = NSCalendar.current.getMonth(fromDate: date)!
-                return .month(date: month)
-            case .week(let week):
-                let week = NSCalendar.current.getFirstDayOfWeek(fromDate: week)!
-                return .week(date: week)
-            }
-        }
-    }
 }
 
 extension MKCalendar: CalendarPageEventHandler {
@@ -266,6 +248,7 @@ extension MKCalendar: CalendarPageEventHandler {
     }
     
     func calendarPage(didDeselectDays days: [Day]) {
+        guard days.count != 0 else { return }
         delegate?.calendar(self, didDeselectDates: days.map{ $0.date })
     }
 }

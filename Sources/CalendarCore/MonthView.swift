@@ -49,7 +49,7 @@ open class MonthView<Cell>: UICollectionViewController, UICollectionViewDelegate
         view.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .clear
         collectionView.isScrollEnabled = false
-        collectionView.allowsMultipleSelection = style.allowMultipleSelection
+        collectionView.allowsMultipleSelection = true
         
         collectionView.register(Cell.self, forCellWithReuseIdentifier: Cell.reuseIdentifier)
     }
@@ -95,7 +95,6 @@ open class MonthView<Cell>: UICollectionViewController, UICollectionViewDelegate
     func updateStyle(_ newStyle: MonthViewStyle) {
         style = newStyle
         view.backgroundColor = style.backgroundColor
-        collectionView.allowsMultipleSelection = style.allowMultipleSelection
         collectionView.reloadData()
     }
     

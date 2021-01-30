@@ -10,7 +10,7 @@ import MKCalendar
 
 class CalendarVC: UIViewController {
     
-    var calendar = MKCalendar(initialState: .week(date: Date()))
+    var calendar = MKCalendar(initialState: CalendarState.MonthViewToday())
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,15 +25,13 @@ class CalendarVC: UIViewController {
     }
     
     @IBAction func toWeek(_ sender: Any) {
-        let date = Date()
-        let state = MKCalendar.DisplayState.week(date: date)
-        calendar.transition(toDisplayState: state, animated: true, completion: nil)
+        let state = CalendarState.WeekViewToday()
+        calendar.transition(toCalendarState: state, animated: true, completion: nil)
     }
     
     @IBAction func toMonth(_ sender: Any) {
-        let date = Date()
-        let state = MKCalendar.DisplayState.month(date: date)
-        calendar.transition(toDisplayState: state, animated: true, completion: nil)
+        let state = CalendarState.MonthViewToday()
+        calendar.transition(toCalendarState: state, animated: true, completion: nil)
     }
     
     @IBAction func toggleTimeline(_ sender: Any) {

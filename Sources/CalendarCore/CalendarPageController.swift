@@ -21,7 +21,7 @@ public class CalendarPageController: UIPageViewController {
     
     var selectedDays: [Day] = []
     
-    var displayState: MKCalendar.DisplayState
+    var calendarState: CalendarState
     
     var transitionDuration: CFTimeInterval = 0.5
     
@@ -33,8 +33,8 @@ public class CalendarPageController: UIPageViewController {
     
     var weekViewStyle: WeekViewStyle = WeekViewStyle()
     
-    init(initialState: MKCalendar.DisplayState) {
-        displayState = initialState
+    init(initialState: CalendarState) {
+        calendarState = initialState
         
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     }
@@ -50,18 +50,17 @@ public class CalendarPageController: UIPageViewController {
         dataSource = self
         delegate = self
         
-        let initialView = getViewController(fromDisplayState: self.displayState)
+        let initialView = getViewController(fromCalendarState: self.calendarState)
         setViewControllers([initialView], direction: .forward, animated: false, completion: nil)
     }
     
-    private func getViewController(fromDisplayState state: MKCalendar.DisplayState) -> UIViewController {
-        let stateNormalized = state.normalized()
+    private func getViewController(fromCalendarState state: CalendarState) -> UIViewController {
         var vc: UIViewController
-        switch stateNormalized {
-        case .month(let month):
-            vc = getMonthView(forDate: month)
-        case .week(let week):
-            vc = getWeekView(forDate: week)
+        switch state.mode {
+        case .month:
+            vc = getMonthView(forDate: state.date)
+        case .week:
+            vc = getWeekView(forDate: state.date)
         }
         return vc
     }
@@ -81,8 +80,8 @@ public class CalendarPageController: UIPageViewController {
             monthView.collectionView.indexPathsForVisibleItems.forEach { indexPath in
                 let cell = monthView.collectionView.cellForItem(at: indexPath) as! DayCell
                 if daysSelectedInCurrentMonth.contains(cell.day) {
-                    monthView.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally)
-                   }
+                    monthView.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+                }
             }
             monthView.updateStyle(monthViewStyle)
             monthViews[month] = monthView
@@ -93,19 +92,23 @@ public class CalendarPageController: UIPageViewController {
     private func getWeekView(forDate date: Date) -> WeekView<DayCell> {
         let week = calendar.getFirstDayOfWeek(fromDate: date)!
         if let weekView = weekViews[week] {
+            let endOfWeek = calendar.getLastDayOfWeek(fromDate: week)!
+            let range = week ... endOfWeek
+            let daysSelectedInCurrentWeek = selectedDays.filter{range.contains($0.date)}
+            let ip = IndexPath(item: 5, section: 0)
+            print("items \(weekView.collectionView.cellForItem(at: ip))")
             return weekView
         } else {
             let weekView = WeekView(date: week)
             weekView.delegate = self
-            let endOfWeek = calendar.getLastDayOfWeek(fromDate: week)!
-            let range = week ... endOfWeek
-            let daysSelectedInCurrentWeek = selectedDays.filter{range.contains($0.date)}
-            weekView.collectionView.indexPathsForVisibleItems.forEach { indexPath in
-                let cell = weekView.collectionView.cellForItem(at: indexPath) as! DayCell
-                if daysSelectedInCurrentWeek.contains(cell.day) {
-                    weekView.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally)
-                }
-            }
+
+
+//            weekView.collectionView.indexPathsForVisibleItems.forEach { indexPath in
+//                let cell = weekView.collectionView.cellForItem(at: indexPath) as! DayCell
+//                if daysSelectedInCurrentWeek.contains(cell.day) {
+//                    weekView.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally)
+//                }
+//            }
             weekView.updateStyle(weekViewStyle)
             weekViews[week] = weekView
             return weekView
@@ -114,11 +117,11 @@ public class CalendarPageController: UIPageViewController {
     
     // MARK: Transition
     
-    func transition(toDisplayState state: MKCalendar.DisplayState, animated: Bool) {
-        let vc = getViewController(fromDisplayState: state)
-        let dir: UIPageViewController.NavigationDirection = state.value().compare(self.displayState.value()) != .orderedAscending ? .forward : .reverse
+    func transition(toCalendarState state: CalendarState, animated: Bool) {
+        let vc = getViewController(fromCalendarState: state)
+        let dir: UIPageViewController.NavigationDirection = state.date.compare(self.calendarState.date) != .orderedAscending ? .forward : .reverse
         self.setViewControllers([vc], direction: dir, animated: true, completion: { [weak self] _ in
-            self?.displayState = state
+            self!.calendarState = state
             NotificationCenter.default.post(name: .didUpdateCalendar, object: nil)
         })
     }
@@ -143,7 +146,7 @@ public class CalendarPageController: UIPageViewController {
 
 extension CalendarPageController: UIPageViewControllerDataSource {
     public func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        switch displayState {
+        switch calendarState.mode {
         case .month:
             let vc = viewController as! MonthView
             let date = calendar.date(byAdding: .month, value: -1, to: vc.month)!
@@ -156,7 +159,7 @@ extension CalendarPageController: UIPageViewControllerDataSource {
     }
     
     public func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        switch displayState {
+        switch calendarState.mode {
         case .month:
             let vc = viewController as! MonthView
             let date = calendar.date(byAdding: .month, value: 1, to: vc.month)!
@@ -173,14 +176,30 @@ extension CalendarPageController: UIPageViewControllerDataSource {
 
 extension CalendarPageController: UIPageViewControllerDelegate {
     public func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
-
+        if let vc = pendingViewControllers.first! as? MonthView {
+            for item in 0 ..<
+                vc.collectionView.numberOfItems(inSection: 0) {
+                let ip = IndexPath(item: item, section: 0)
+                if selectedDays.contains(vc.days[ip.item]) {
+                    vc.collectionView.selectItem(at: ip, animated: false, scrollPosition: [])
+                }
+            }
+        } else if let vc = pendingViewControllers.first! as? WeekView {
+            for item in 0 ..<
+                vc.collectionView.numberOfItems(inSection: 0) {
+                let ip = IndexPath(item: item, section: 0)
+                if selectedDays.contains(vc.days[ip.item]) {
+                    vc.collectionView.selectItem(at: ip, animated: false, scrollPosition: [])
+                }
+            }
+        }
     }
     
     public func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         if let monthView = self.viewControllers?.first as? MonthView {
-            displayState = .month(date: monthView.month)
+            calendarState = CalendarState(mode: .month, date: monthView.month)
         } else if let weekView = self.viewControllers?.first as? WeekView {
-            displayState = .week(date: weekView.week)
+            calendarState = CalendarState(mode: .week, date: weekView.week)
         }
         NotificationCenter.default.post(name: .didUpdateCalendar, object: nil)
     }

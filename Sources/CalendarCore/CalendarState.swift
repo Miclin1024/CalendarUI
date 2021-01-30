@@ -42,7 +42,7 @@ public class CalendarState: Equatable {
         }
     }
     
-    init(mode: DisplayMode, date: Date) {
+    public init(mode: DisplayMode, date: Date) {
         self.mode = mode
         switch mode {
         case .month:

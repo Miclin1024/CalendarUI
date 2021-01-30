@@ -71,12 +71,13 @@ public class MKCalendar: UIViewController {
     var timelineContainerHeightConstraint: NSLayoutConstraint!
     
     public init(initialState: DisplayState = .month(date: Date())) {
-        calendarPage = CalendarPageController(initialState: initialState)
+        let normalizedInitialDate = initialState.normalized()
+        calendarPage = CalendarPageController(initialState: normalizedInitialDate)
         super.init(nibName: nil, bundle: nil)
     }
     
     required public init?(coder: NSCoder) {
-        calendarPage = CalendarPageController(initialState: .month(date: Date()))
+        calendarPage = CalendarPageController(initialState: DisplayState.month(date: Date()).normalized())
         super.init(coder: coder)
     }
     
@@ -206,8 +207,9 @@ public class MKCalendar: UIViewController {
     }
     
     public func transition(toDisplayState state: DisplayState, animated: Bool, completion: ((Bool)->Void)?) {
-        self.calendarPage.transition(toDisplayState: state, animated: animated)
-        let contentPadding = layout.edgeInset(forCalendarDisplayState: .month(date: Date()))
+        let stateNormalized = state.normalized()
+        self.calendarPage.transition(toDisplayState: stateNormalized, animated: animated)
+        let contentPadding = layout.edgeInset(forCalendarDisplayState: DisplayState.month(date: Date()).normalized())
         let width = view.bounds.inset(by: contentPadding).width
         let weekViewRowHeight: CGFloat = width / 7
         if case .week(_) = state {
@@ -242,6 +244,17 @@ public class MKCalendar: UIViewController {
                 return date
             case .week(let date):
                 return date
+            }
+        }
+        
+        func normalized() -> DisplayState {
+            switch self {
+            case .month(let date):
+                let month = NSCalendar.current.getMonth(fromDate: date)!
+                return .month(date: month)
+            case .week(let week):
+                let week = NSCalendar.current.getFirstDayOfWeek(fromDate: week)!
+                return .week(date: week)
             }
         }
     }

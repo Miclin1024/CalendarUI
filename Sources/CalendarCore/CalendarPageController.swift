@@ -55,8 +55,9 @@ public class CalendarPageController: UIPageViewController {
     }
     
     private func getViewController(fromDisplayState state: MKCalendar.DisplayState) -> UIViewController {
+        let stateNormalized = state.normalized()
         var vc: UIViewController
-        switch state {
+        switch stateNormalized {
         case .month(let month):
             vc = getMonthView(forDate: month)
         case .week(let week):

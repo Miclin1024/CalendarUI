@@ -18,8 +18,6 @@ public class MKCalendar: UIViewController {
         }
     }
     
-    public var layout: MKCalendarLayout = MKCalendarDefaultLayout()
-    
     public var calendarState: CalendarState {
         get {
             return calendarPage.calendarState
@@ -54,7 +52,9 @@ public class MKCalendar: UIViewController {
     
     public var calendarPage: CalendarPageController
     
-    var style: MKCalendarStyle = MKCalendarStyle()
+    var layout: MKCalendarLayout = MKCalendarDefaultLayout()
+    
+    var style = MKCalendarStyle()
     
     var calendar = NSCalendar.current
     
@@ -129,6 +129,7 @@ public class MKCalendar: UIViewController {
             timelineContainerHeightConstraint = timelineContainer.heightAnchor.constraint(equalToConstant: 0)
         }
 
+        timelineContainerHeightConstraint.priority = .defaultHigh
         timelineContainerHeightConstraint.isActive = true
         
         updateHeaderView()
@@ -143,7 +144,7 @@ public class MKCalendar: UIViewController {
     
     // MARK: Style Update
     
-    public func updateStyle(_ newStyle: MKCalendarStyle) {
+    open func updateStyle(_ newStyle: MKCalendarStyle) {
         style = newStyle
         
         timeline.updateStyle(style.timeline)
@@ -152,6 +153,14 @@ public class MKCalendar: UIViewController {
         
         headerPaddingConstraint.constant = style.headerBottomPadding
         view.backgroundColor = style.backgroundColor
+    }
+    
+    open func updateLayout(_ newLayout: MKCalendarLayout) {
+        layout = newLayout
+        
+        if case .week = calendarState.mode {
+            timelineContainerHeightConstraint.constant = hideTimelineView ? 0 : layout.timelineHuggingHeight
+        }
     }
     
     public func addCalendar(toParent parent: UIViewController) {

@@ -14,24 +14,32 @@ public protocol MKCalendarLayout {
     
     func edgeInset(forCalendarState state: CalendarState) -> UIEdgeInsets
     
-//    func calendarHeight(_ calendar: MKCalendar, forDisplayState state: MKCalendar.DisplayState, isTimelineHidden: Bool) -> CGFloat
-    
-    var timelineHuggingHeight: CGFloat { get }
+    var timelineHuggingHeight: CGFloat { get set }
 }
 
 public class MKCalendarDefaultLayout: MKCalendarLayout {
     
     public func calendarTitle(_ calendar: MKCalendar, forCalendarState state: CalendarState, selectedDays days: [Day]) -> String {
-        let date = days.first?.date ?? Date()
+        let dateSelected = days.first?.date ?? Date()
+        let startRange = state.date
+        let endRange = state.mode == .week ?
+        calendar.calendar.date(byAdding: .day, value: 7, to: startRange)! :
+            calendar.calendar.date(byAdding: .month, value: 1, to: startRange)!
+        let range = startRange ... endRange
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "MMMM d, y"
-        return formatter.string(from: date)
+        if range.contains(dateSelected) {
+            formatter.dateFormat = "MMMM d, y"
+            return formatter.string(from: dateSelected)
+        } else {
+            formatter.dateFormat = "MMMM, y"
+            return formatter.string(from: startRange)
+        }
     }
     
     public func edgeInset(forCalendarState state: CalendarState) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
     }
     
-    public var timelineHuggingHeight: CGFloat = UIScreen.main.bounds.height * 0.6
+    public var timelineHuggingHeight: CGFloat = UIScreen.main.bounds.height * 0.5
 }

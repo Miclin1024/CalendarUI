@@ -61,3 +61,7 @@ public class CalendarState: Equatable {
 public enum DisplayMode {
     case month, week
 }
+
+public enum SelectionMode {
+    case single, multiple
+}

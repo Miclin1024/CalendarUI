@@ -8,6 +8,11 @@
 import Foundation
 import UIKit
 
+public protocol MKCalendarDelegate: class {
+    func calendar(_ calendar: MKCalendar, didSelectDate date: Date)
+    func calendar(_ calendar: MKCalendar, didDeselectDates dates: [Date])
+}
+
 public class MKCalendar: UIViewController {
     
     public weak var delegate: MKCalendarDelegate?
@@ -206,6 +211,7 @@ public class MKCalendar: UIViewController {
         let events = eventsProvider?.calendar(self, eventsForDate: selectedDate)
         let validEvents = events?.filter{$0.datePeriod.overlaps(day)}
         timeline.layoutAttributes = validEvents?.map(EventLayoutAttributes.init) ?? []
+        
     }
     
     public func setHideTimelineView(_ value: Bool, animated: Bool) {
@@ -222,10 +228,9 @@ public class MKCalendar: UIViewController {
     public func transition(toCalendarState state: CalendarState, animated: Bool, completion: ((Bool)->Void)?) {
         
         guard calendarState != state else {
-            completion?(true)
+            completion?(false)
             return
         }
-        
         self.calendarState.isTransitioning = true
         self.calendarPage.transition(toCalendarState: state, animated: true)
         let contentPadding = layout.edgeInset(forCalendarState: state)
@@ -263,13 +268,4 @@ extension MKCalendar: CalendarPageEventHandler {
         guard days.count != 0 else { return }
         delegate?.calendar(self, didDeselectDates: days.map{ $0.date })
     }
-}
-
-public protocol MKCalendarDelegate: class {
-    func calendar(_ calendar: MKCalendar, didSelectDate date: Date)
-    func calendar(_ calendar: MKCalendar, didDeselectDates dates: [Date])
-}
-
-enum SelectionMode {
-    case single, multiple
 }

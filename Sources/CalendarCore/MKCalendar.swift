@@ -142,7 +142,7 @@ public class MKCalendar: UIViewController {
         timelineContainer.contentSize = timeline.frame.size
     }
     
-    // MARK: Style Update
+    // MARK: Calendar Update
     
     open func updateStyle(_ newStyle: MKCalendarStyle) {
         style = newStyle
@@ -167,6 +167,10 @@ public class MKCalendar: UIViewController {
         parent.addChild(self)
         self.didMove(toParent: parent)
         parent.view.addSubview(self.view)
+    }
+    
+    public func reloadData() {
+        updateTimelineView()
     }
     
     // MARK: Calendar Subviews Update
@@ -202,7 +206,6 @@ public class MKCalendar: UIViewController {
         let events = eventsProvider?.calendar(self, eventsForDate: selectedDate)
         let validEvents = events?.filter{$0.datePeriod.overlaps(day)}
         timeline.layoutAttributes = validEvents?.map(EventLayoutAttributes.init) ?? []
-        
     }
     
     public func setHideTimelineView(_ value: Bool, animated: Bool) {

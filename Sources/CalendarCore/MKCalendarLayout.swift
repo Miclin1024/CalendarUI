@@ -42,4 +42,6 @@ public class MKCalendarDefaultLayout: MKCalendarLayout {
     }
     
     public var timelineHuggingHeight: CGFloat = UIScreen.main.bounds.height * 0.5
+    
+    public init(){}
 }

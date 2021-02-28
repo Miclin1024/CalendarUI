@@ -133,9 +133,9 @@
 		1AED89ED25BD16B100015550 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				1AF3868925EAF1480006AE59 /* Calendar */,
 				1AED8A6F25BD60A200015550 /* MKCalendar.h */,
 				1AED89F025BD16F000015550 /* Timeline */,
+				1AF3868925EAF1480006AE59 /* Calendar */,
 				1AED89EF25BD16E200015550 /* Extensions */,
 				1AED89EE25BD16C600015550 /* CalendarCore */,
 			);

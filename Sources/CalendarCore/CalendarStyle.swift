@@ -36,6 +36,7 @@ public struct HeaderStyle {
     public var labelColor = SystemColors.secondaryLabel
     public var accentColor = SystemColors.systemBlue
     public var titleColor = SystemColors.label
+    public var highlightSelected = true
     public var titleBottomPadding: CGFloat = 15.0
     public var titleFont = UIFont.systemFont(ofSize: 15, weight: .bold)
     public init() {}

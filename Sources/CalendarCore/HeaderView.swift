@@ -105,7 +105,7 @@ public class HeaderView: UIView {
         CATransaction.begin()
         CATransaction.setAnimationDuration(transitionDuration)
         weekdaySymbolLabels.enumerated().forEach { index, elem in
-            if selectedSymbolIndices.contains(index) {
+            if style.highlightSelected && selectedSymbolIndices.contains(index) {
                 elem.textColor = style.accentColor
             } else {
                 elem.textColor = style.labelColor

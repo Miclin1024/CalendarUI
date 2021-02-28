@@ -22,8 +22,7 @@ public enum DateStyle {
 public struct MKCalendarStyle {
     public var header = HeaderStyle()
     public var timeline = TimelineStyle()
-    public var month = MonthViewStyle()
-    public var week = WeekViewStyle()
+    public var calendar = CalendarViewStyle()
     
     public var headerBottomPadding: CGFloat = 10
     public var backgroundColor = SystemColors.clear
@@ -41,16 +40,10 @@ public struct HeaderStyle {
     public init() {}
 }
 
-public struct WeekViewStyle {
+public struct CalendarViewStyle {
     public var dayCellStyle = DayCellStyle()
     public var backgroundColor = SystemColors.clear
-    public init() {}
-}
-
-public struct MonthViewStyle {
-    public var dayCellStyle = DayCellStyle()
     public var allowMultipleSelection = false
-    public var backgroundColor = SystemColors.clear
     public init() {}
 }
 

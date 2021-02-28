@@ -8,13 +8,13 @@
 import Foundation
 
 public struct Day: Hashable, Equatable {
-    var date: Date
+    public var date: Date
     
-    var number: Int
+    public var number: Int
     
-    var isCurrentMonth: Bool
+    public var isCurrentMonth: Bool
     
-    var isToday: Bool = false
+    public var isToday: Bool = false
     
     public static func ==(lhs: Day, rhs: Day) -> Bool {
         return NSCalendar.current.compare(lhs.date, to: rhs.date, toGranularity: .nanosecond) == .orderedSame

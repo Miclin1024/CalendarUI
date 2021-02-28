@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class CalendarState: Equatable {
+public struct CalendarState: Equatable {
     
     public static func MonthViewToday() -> CalendarState {
         return CalendarState(mode: .month, date: Date())
@@ -17,7 +17,7 @@ public class CalendarState: Equatable {
         return CalendarState(mode: .week, date: Date())
     }
     
-    public private(set) var mode: DisplayMode
+    public private(set) var mode: MKCalendar.DisplayMode
     
     public private(set) var date: Date {
         get {
@@ -33,7 +33,7 @@ public class CalendarState: Equatable {
     
     private var dateNormalized: Date
     
-    private func setNormalizedDate(usingDate date: Date) {
+    private mutating func setNormalizedDate(usingDate date: Date) {
         switch mode {
         case .month:
             dateNormalized = NSCalendar.current.getMonth(fromDate: date)!
@@ -42,7 +42,7 @@ public class CalendarState: Equatable {
         }
     }
     
-    public init(mode: DisplayMode, date: Date) {
+    public init(mode: MKCalendar.DisplayMode, date: Date) {
         self.mode = mode
         switch mode {
         case .month:
@@ -58,10 +58,3 @@ public class CalendarState: Equatable {
     }
 }
 
-public enum DisplayMode {
-    case month, week
-}
-
-public enum SelectionMode {
-    case single, multiple
-}

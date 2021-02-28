@@ -45,12 +45,6 @@ public class MKCalendar: UIViewController {
         }
     }
     
-    public var transitionDuration: CFTimeInterval = 0.5 {
-        didSet {
-            calendarPage.transitionDuration = self.transitionDuration
-        }
-    }
-    
     public var headerView: HeaderView = HeaderView()
     
     public var timeline: TimelineView = TimelineView()
@@ -154,7 +148,7 @@ public class MKCalendar: UIViewController {
         
         timeline.updateStyle(style.timeline)
         headerView.updateStyle(style.header)
-        calendarPage.updateStyle(month: style.month, week: style.week)
+        calendarPage.updateStyle(style.calendar)
         
         headerPaddingConstraint.constant = style.headerBottomPadding
         view.backgroundColor = style.backgroundColor
@@ -231,7 +225,7 @@ public class MKCalendar: UIViewController {
             completion?(false)
             return
         }
-        self.calendarState.isTransitioning = true
+        
         self.calendarPage.transition(toCalendarState: state, animated: true)
         let contentPadding = layout.edgeInset(forCalendarState: state)
         let width = view.bounds.inset(by: contentPadding).width
@@ -244,7 +238,7 @@ public class MKCalendar: UIViewController {
             calendarPageHeightConstraint.constant = weekViewRowHeight * 6
         }
         if animated {
-            UIView.animate(withDuration: transitionDuration, animations: {
+            UIView.animate(withDuration: 0.5, animations: {
                 self.view.layoutIfNeeded()
                 self.view.superview?.layoutIfNeeded()
                 self.timelineContainer.layoutIfNeeded()
@@ -256,6 +250,14 @@ public class MKCalendar: UIViewController {
     @objc func didReceiveCalendarUpdate(_ notification: Notification) {
         updateHeaderView()
         updateTimelineView()
+    }
+    
+    public enum DisplayMode: CaseIterable {
+        case month, week
+    }
+
+    public enum SelectionMode {
+        case single, multiple
     }
 }
 

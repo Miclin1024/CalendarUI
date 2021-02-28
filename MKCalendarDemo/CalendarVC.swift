@@ -25,13 +25,23 @@ class CalendarVC: UIViewController {
     }
     
     @IBAction func toWeek(_ sender: Any) {
-        let state = CalendarState.WeekViewToday()
-        calendar.transition(toCalendarState: state, animated: true, completion: nil)
+        if let day = calendar.selectedDays.first {
+            let state = CalendarState(mode: .week, date: day.date)
+            calendar.transition(toCalendarState: state, animated: true, completion: nil)
+        } else {
+            let state = CalendarState.WeekViewToday()
+            calendar.transition(toCalendarState: state, animated: true, completion: nil)
+        }
     }
     
     @IBAction func toMonth(_ sender: Any) {
-        let state = CalendarState.MonthViewToday()
-        calendar.transition(toCalendarState: state, animated: true, completion: nil)
+        if let day = calendar.selectedDays.first {
+            let state = CalendarState(mode: .month, date: day.date)
+            calendar.transition(toCalendarState: state, animated: true, completion: nil)
+        } else {
+            let state = CalendarState.MonthViewToday()
+            calendar.transition(toCalendarState: state, animated: true, completion: nil)
+        }
     }
     
     @IBAction func toggleTimeline(_ sender: Any) {

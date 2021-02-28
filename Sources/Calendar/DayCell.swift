@@ -10,13 +10,15 @@ import UIKit
 
 public class DayCell: UICollectionViewCell {
     
+    static let reuseIdentifier = String(describing: DayCell.self)
+    
     public override var isSelected: Bool {
         didSet {
             updateStyle(style)
         }
     }
     
-    var style: DayCellStyle = DayCellStyle()
+    private(set) var style: DayCellStyle = DayCellStyle()
     
     var numberLabel: UILabel = {
         let label = UILabel()
@@ -41,11 +43,13 @@ public class DayCell: UICollectionViewCell {
         }
     }
     
-    static let reuseIdentifier = String(describing: DayCell.self)
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         configure()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     func updateStyle(_ newStyle: DayCellStyle) {
@@ -83,9 +87,5 @@ public class DayCell: UICollectionViewCell {
             selectionBackgroundView.heightAnchor.constraint(equalToConstant: selectionSize),
         ])
         selectionBackgroundView.layer.cornerRadius = selectionSize / 2
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

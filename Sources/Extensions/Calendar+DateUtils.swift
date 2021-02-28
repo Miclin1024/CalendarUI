@@ -9,9 +9,15 @@ import Foundation
 
 extension Calendar {
     func datesBetween(_ startDate: Date, through endDate: Date, byAdding component: Calendar.Component, value: Int) -> [Date] {
+        let calendar = NSCalendar.current
         
         let normalizedStartDate = startOfDay(for: startDate)
         let normalizedEndDate = startOfDay(for: endDate)
+        
+        guard calendar.compare(normalizedStartDate, to: normalizedEndDate, toGranularity: .nanosecond) == .orderedAscending else {
+            print("WARNING: Start date \(startDate) and end date \(endDate) are not in ascending order")
+            return []
+        }
         
         var dates: [Date] = [normalizedStartDate]
         var currDates = normalizedStartDate

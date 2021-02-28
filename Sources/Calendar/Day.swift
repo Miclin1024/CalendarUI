@@ -15,8 +15,4 @@ public struct Day: Hashable, Equatable {
     public var isCurrentMonth: Bool
     
     public var isToday: Bool = false
-    
-    public static func ==(lhs: Day, rhs: Day) -> Bool {
-        return NSCalendar.current.compare(lhs.date, to: rhs.date, toGranularity: .nanosecond) == .orderedSame
-    }
 }

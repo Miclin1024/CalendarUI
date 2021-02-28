@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-protocol CalendarPageEventHandler: class {
+protocol CalendarPageDelegate: class {
     func calendarPage(didSelectDay day: Day)
     func calendarPage(didDeselectDays days: [Day])
 }
@@ -17,7 +17,7 @@ public class CalendarPageController: UIPageViewController {
     
     let calendar = NSCalendar.current
     
-    weak var handler: CalendarPageEventHandler?
+    weak var pageDelegate: CalendarPageDelegate?
     
     var selectedDays: [Day] = []
     
@@ -197,7 +197,8 @@ extension CalendarPageController: CalendarVCDelegate {
         selectedDays.append(day)
         
         NotificationCenter.default.post(name: .didUpdateCalendar, object: nil)
-        handler?.calendarPage(didDeselectDays: [day])
+        pageDelegate?.calendarPage(didDeselectDays: [day])
+        pageDelegate?.calendarPage(didSelectDay: day)
     }
     
     public func calendarVC(_ calendarVC: CalendarVC, didDeselectDay day: Day) {
@@ -205,7 +206,7 @@ extension CalendarPageController: CalendarVCDelegate {
         self.deselectCell(withDay: day)
         
         NotificationCenter.default.post(name: .didUpdateCalendar, object: nil)
-        handler?.calendarPage(didDeselectDays: [day])
+        pageDelegate?.calendarPage(didDeselectDays: [day])
     }
     
     private func deselectCell(withDay day: Day) {

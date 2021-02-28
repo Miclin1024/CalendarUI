@@ -69,10 +69,6 @@ extension CalendarVC: MKCalendarDelegate {
     func calendar(_ calendar: MKCalendar, didDeselectDates dates: [Date]) {
         print("Deselected dates \(dates)")
     }
-    
-
-
-    
 }
 
 class Event: EventDescriptor {

@@ -26,6 +26,7 @@ public struct MKCalendarStyle {
     
     public var headerBottomPadding: CGFloat = 10
     public var backgroundColor = SystemColors.clear
+    public var contentInset = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)
     
     public init() {}
 }

@@ -80,29 +80,29 @@ public class MKCalendar: UIViewController {
     }
     
     public override func viewDidLoad() {
-        let contentPadding = layout.edgeInset(forCalendarState: calendarState)
+        let contentPadding = style.contentInset
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = style.backgroundColor
         
         view.addSubview(headerView)
         NSLayoutConstraint.activate([
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentPadding.left),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentPadding.right),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentPadding.leading),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentPadding.trailing),
             headerView.topAnchor.constraint(equalTo: view.topAnchor, constant: contentPadding.top)
         ])
         
         addChild(calendarPage)
         calendarPage.didMove(toParent: self)
         view.addSubview(calendarPage.view)
-        calendarPage.handler = self
+        calendarPage.pageDelegate = self
         headerPaddingConstraint = calendarPage.view.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: style.headerBottomPadding)
         NSLayoutConstraint.activate([
             headerPaddingConstraint,
-            calendarPage.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentPadding.left),
-            calendarPage.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentPadding.right),
+            calendarPage.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentPadding.leading),
+            calendarPage.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentPadding.trailing),
         ])
 
-        let width = view.bounds.inset(by: contentPadding).width
+        let width = view.bounds.width - contentPadding.leading - contentPadding.trailing
         let weekViewRowHeight: CGFloat = width / 7
         var calendarPageHeight: CGFloat
         if case .week = calendarState.mode {
@@ -110,15 +110,15 @@ public class MKCalendar: UIViewController {
         } else {
             calendarPageHeight = weekViewRowHeight * 6
         }
-        calendarPageHeightConstraint = calendarPage.view.heightAnchor.constraint(equalToConstant: calendarPageHeight)
+        calendarPageHeightConstraint = calendarPage.view.heightAnchor.constraint(greaterThanOrEqualToConstant: calendarPageHeight)
         calendarPageHeightConstraint.isActive = true
         
         view.addSubview(timelineContainer)
         timelineContainer.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             timelineContainer.topAnchor.constraint(equalTo: calendarPage.view.bottomAnchor),
-            timelineContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentPadding.left),
-            timelineContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentPadding.right),
+            timelineContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentPadding.leading),
+            timelineContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentPadding.trailing),
             timelineContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
@@ -227,8 +227,7 @@ public class MKCalendar: UIViewController {
         }
         
         self.calendarPage.transition(toCalendarState: state, animated: true)
-        let contentPadding = layout.edgeInset(forCalendarState: state)
-        let width = view.bounds.inset(by: contentPadding).width
+        let width = view.bounds.width
         let weekViewRowHeight: CGFloat = width / 7
         if case .week = state.mode {
             timelineContainerHeightConstraint.constant = hideTimelineView ? 0 : layout.timelineHuggingHeight
@@ -261,7 +260,7 @@ public class MKCalendar: UIViewController {
     }
 }
 
-extension MKCalendar: CalendarPageEventHandler {
+extension MKCalendar: CalendarPageDelegate {
     func calendarPage(didSelectDay day: Day) {
         delegate?.calendar(self, didSelectDate: day.date)
     }

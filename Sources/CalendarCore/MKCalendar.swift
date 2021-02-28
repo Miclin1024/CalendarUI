@@ -15,6 +15,14 @@ public protocol MKCalendarDelegate: class {
 
 public class MKCalendar: UIViewController {
     
+    public enum DisplayMode: CaseIterable {
+        case month, week
+    }
+
+    public enum SelectionMode {
+        case single, multiple
+    }
+    
     public weak var delegate: MKCalendarDelegate?
     
     public weak var eventsProvider: EventsProvider? {
@@ -141,8 +149,19 @@ public class MKCalendar: UIViewController {
         timelineContainer.contentSize = timeline.frame.size
     }
     
-    // MARK: Calendar Update
+    public func addCalendar(toParent parent: UIViewController) {
+        parent.addChild(self)
+        self.didMove(toParent: parent)
+        parent.view.addSubview(self.view)
+    }
     
+    public func reloadData() {
+        updateTimelineView()
+    }
+}
+
+// MARK: Calendar Style and Layout
+extension MKCalendar {
     open func updateStyle(_ newStyle: MKCalendarStyle) {
         style = newStyle
         
@@ -161,19 +180,10 @@ public class MKCalendar: UIViewController {
             timelineContainerHeightConstraint.constant = hideTimelineView ? 0 : layout.timelineHuggingHeight
         }
     }
-    
-    public func addCalendar(toParent parent: UIViewController) {
-        parent.addChild(self)
-        self.didMove(toParent: parent)
-        parent.view.addSubview(self.view)
-    }
-    
-    public func reloadData() {
-        updateTimelineView()
-    }
-    
-    // MARK: Calendar Subviews Update
-    
+}
+
+// MARK: Transitions and Animations
+extension MKCalendar {
     func updateHeaderView() {
         switch calendarState.mode {
         case .month:
@@ -219,14 +229,10 @@ public class MKCalendar: UIViewController {
         }
     }
     
-    public func transition(toCalendarState state: CalendarState, animated: Bool, completion: ((Bool)->Void)?) {
+    public func transition(toCalendarState state: CalendarState, animated: Bool, completion: (()->Void)?) {
         
-        guard calendarState != state else {
-            completion?(false)
-            return
-        }
+        guard calendarState != state else { return }
         
-        self.calendarPage.transition(toCalendarState: state, animated: true)
         let width = view.bounds.width
         let weekViewRowHeight: CGFloat = width / 7
         if case .week = state.mode {
@@ -236,30 +242,39 @@ public class MKCalendar: UIViewController {
             timelineContainerHeightConstraint.constant = 0
             calendarPageHeightConstraint.constant = weekViewRowHeight * 6
         }
+        
         if animated {
-            UIView.animate(withDuration: 0.5, animations: {
+            CATransaction.begin()
+            CATransaction.setAnimationDuration(0.5)
+            CATransaction.setCompletionBlock {
+                completion?()
+            }
+            
+            self.calendarPage.transition(toCalendarState: state, animated: true)
+            UIView.animate(withDuration: 0.5) {
                 self.view.layoutIfNeeded()
                 self.view.superview?.layoutIfNeeded()
                 self.timelineContainer.layoutIfNeeded()
                 self.calendarPage.view.layoutIfNeeded()
-            }, completion: completion)
+            }
+            
+            CATransaction.commit()
+        } else {
+            self.calendarPage.transition(toCalendarState: state, animated: false)
+            completion?()
         }
     }
-    
+}
+
+// MARK: Event Handlers
+extension MKCalendar {
     @objc func didReceiveCalendarUpdate(_ notification: Notification) {
         updateHeaderView()
         updateTimelineView()
     }
-    
-    public enum DisplayMode: CaseIterable {
-        case month, week
-    }
-
-    public enum SelectionMode {
-        case single, multiple
-    }
 }
 
+// MARK: Calendar Page Delegate
 extension MKCalendar: CalendarPageDelegate {
     func calendarPage(didSelectDay day: Day) {
         delegate?.calendar(self, didSelectDate: day.date)

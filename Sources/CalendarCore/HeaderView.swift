@@ -12,11 +12,21 @@ public class HeaderView: UIView {
     
     let calendar = NSCalendar.current
     
-    open var transitionDuration: CFTimeInterval = 0.5
+    public var titleLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = ""
+        return label
+    }()
     
-    var style: HeaderStyle = HeaderStyle()
+    public var weekdaySymbolLabels: [UILabel] = []
+    
+    public var transitionDuration: CFTimeInterval = 0.5
     
     var selectedDates: [Date] = []
+    
+    private(set) var style: HeaderStyle = HeaderStyle()
     
     private var weekdaySymbols: [String] {
         get {
@@ -36,18 +46,6 @@ public class HeaderView: UIView {
         }
     }
     
-    var titleLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = ""
-        return label
-    }()
-    
-    var weekdaySymbolLabels: [UILabel] = []
-    
-    var titleSpacingConstraint: NSLayoutConstraint!
-    
     private var stackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
@@ -55,6 +53,8 @@ public class HeaderView: UIView {
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
+    
+    private var titleSpacingConstraint: NSLayoutConstraint!
     
     convenience init() {
         self.init(frame: .zero)
@@ -89,7 +89,10 @@ public class HeaderView: UIView {
 
         weekdaySymbolLabels.forEach { self.stackView.addArrangedSubview($0) }
     }
-    
+}
+
+// MARK: Style Update
+extension HeaderView {
     func updateStyle(_ newStyle: HeaderStyle) {
         style = newStyle
         titleSpacingConstraint.constant = style.titleBottomPadding
@@ -112,9 +115,5 @@ public class HeaderView: UIView {
             }
         }
         CATransaction.commit()
-    }
-    
-    private func updateStyle() {
-        
     }
 }

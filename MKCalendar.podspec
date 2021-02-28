@@ -3,7 +3,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "MKCalendar"
-  spec.version      = "0.0.6"
+  spec.version      = "0.1.0"
   spec.swift_version = ["5.1", "5.2", "5.3"]
   spec.summary      = "A customizable calendar framework for iOS"
 
@@ -13,8 +13,8 @@ Pod::Spec.new do |spec|
 
   spec.author             = { "Michael Lin" => "miclin@berkeley.edu" }
 
-  spec.platform     = :ios, "12.0"
-  spec.ios.deployment_target = "12.0"
+  spec.platform     = :ios, "13.0"
+  spec.ios.deployment_target = "13.0"
 
   spec.source       = { :git => "https://github.com/Miclin1024/MKCalendar.git", :tag => spec.version.to_s }
   spec.source_files  = "Sources/**/*.swift"

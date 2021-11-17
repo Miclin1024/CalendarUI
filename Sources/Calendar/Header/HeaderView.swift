@@ -31,7 +31,6 @@ final class HeaderView: UIView {
         stack.axis = .horizontal
         stack.distribution = .fillEqually
         stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.spacing = 5
         return stack
     }()
     

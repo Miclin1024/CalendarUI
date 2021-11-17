@@ -25,15 +25,15 @@ class CalendarStateTests: CalendarUITests {
     }
 
     func testStateFactoryInit() throws {
-        let lhs = CalendarState.state(withLayout: .month, date: testDate)
-        let rhs = CalendarState.state(withLayout: .month, date: testDate)
-        let notEqual = CalendarState.state(withLayout: .week, date: testDate)
-        XCTAssertTrue(lhs === rhs)
-        XCTAssertFalse(lhs === notEqual)
+        let lhs = CalendarState(withLayout: .month, date: testDate)
+        let rhs = CalendarState(withLayout: .month, date: testDate)
+        let notEqual = CalendarState(withLayout: .week, date: testDate)
+        XCTAssertTrue(lhs == rhs)
+        XCTAssertFalse(lhs == notEqual)
     }
     
     func testStateTransitionMonth() throws {
-        let current = CalendarState.state(withLayout: .month, date: testDate)
+        let current = CalendarState(withLayout: .month, date: testDate)
         let next = current.next
         XCTAssertTrue(next.currentLayout == .month)
         XCTAssertEqual(next.firstDateInMonthOrWeek.ISO8601Format(),
@@ -45,7 +45,7 @@ class CalendarStateTests: CalendarUITests {
     }
     
     func testStateTransitionWeek() throws {
-        let current = CalendarState.state(withLayout: .week, date: testDate)
+        let current = CalendarState(withLayout: .week, date: testDate)
         let next = current.next
         XCTAssertTrue(next.currentLayout == .week)
         XCTAssertEqual(next.firstDateInMonthOrWeek.ISO8601Format(),

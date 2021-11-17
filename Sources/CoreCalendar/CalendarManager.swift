@@ -6,20 +6,22 @@
 //
 
 import Foundation
+import Combine
 
 final class CalendarManager {
     
     static let main = CalendarManager()
     
-    var calendar = Calendar.current
+    static var calendar = Calendar.current
     
     weak var calendarDataSource: CalendarUIDataSource?
     
-    var statePool = [CalendarState.Key: CalendarState]()
+    @Published var state = CalendarState(
+        withLayout: .month, date: .now)
     
-    lazy var state = CalendarState.state(withLayout: .month, date: .now)
+    @Published var isTimelineEnabled: Bool = false
+    
+    @Published var selectedDates = [Date]()
     
     var calendarCellReusePool = ReusePool<CalendarCell>()
-    
-    var selectedDates = [Date]()
 }

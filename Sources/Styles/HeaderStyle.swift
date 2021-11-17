@@ -27,7 +27,7 @@ public enum WeekdaySymbolStyle {
      The list of symbols associated with the style.
      */
     var symbols: [String] {
-        let calendar = CalendarManager.main.calendar
+        let calendar = CalendarManager.calendar
         switch self {
         case .regular:
             return calendar.standaloneWeekdaySymbols

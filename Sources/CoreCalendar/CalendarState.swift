@@ -12,17 +12,11 @@ import Foundation
  
  Includes information such as the active layout, the month/week that is being displayed, and if the timeline view is enabled.
  */
-public final class CalendarState {
+public struct CalendarState: Hashable {
     
-    /** Hashable key for identifying `CalendarState` */
-    struct Key: Hashable {
-        let layout: Layout
-        
-        let date: Date
-    }
-    
-    public enum Layout: Hashable {
-        case month, week
+    public enum Layout: Int, Hashable {
+        case month = 0
+        case week = 1
     }
     
     /** The active calendar layout */
@@ -31,40 +25,34 @@ public final class CalendarState {
     /** The first moment in the current calendar layout, as a `Date`*/
     public var firstDateInMonthOrWeek: Date
     
-    /** Whether the timeline view is enabled  */
-    public var isTimelineEnabled: Bool = false
-    
     /** The previous calendar state based on the current layout. */
-    lazy var prev: CalendarState = {
+    var prev: CalendarState {
         var date: Date
         if currentLayout == .week {
-            date = calendar.date(byAdding: .day, value: -7,
-                                 to: firstDateInMonthOrWeek)!
+            date = CalendarManager.calendar
+                .date(byAdding: .day,
+                      value: -7, to: firstDateInMonthOrWeek)!
         } else {
-            date = calendar.date(byAdding: .month, value: -1,
-                                 to: firstDateInMonthOrWeek)!
+            date = CalendarManager.calendar
+                .date(byAdding: .month,
+                      value: -1, to: firstDateInMonthOrWeek)!
         }
-        return CalendarState.state(withLayout: currentLayout, date: date)
-    }()
-    
-    /** The next calendar state based on the current layout. */
-    lazy var next: CalendarState = {
-        var date: Date
-        if currentLayout == .week {
-            date = calendar.date(byAdding: .day, value: 7,
-                                 to: firstDateInMonthOrWeek)!
-        } else {
-            date = calendar.date(byAdding: .month, value: 1,
-                                 to: firstDateInMonthOrWeek)!
-        }
-        return CalendarState.state(withLayout: currentLayout, date: date)
-    }()
-    
-    var key: Key {
-        return Key(layout: currentLayout, date: firstDateInMonthOrWeek)
+        return CalendarState(withLayout: currentLayout, date: date)
     }
     
-    private let calendar = CalendarManager.main.calendar
+    /** The next calendar state based on the current layout. */
+    var next: CalendarState {
+        var date: Date
+        if currentLayout == .week {
+            date = CalendarManager.calendar
+                .date(byAdding: .day, value: 7, to: firstDateInMonthOrWeek)!
+        } else {
+            date = CalendarManager.calendar
+                .date(byAdding: .month,
+                      value: 1, to: firstDateInMonthOrWeek)!
+        }
+        return CalendarState(withLayout: currentLayout, date: date)
+    }
     
     /**
      Initialize a calendar state using the month layout.
@@ -72,7 +60,8 @@ public final class CalendarState {
      The `Date` parameter will be normalized to the first moment of the month.
      */
     private init(withMonthLayout month: Date) {
-        let date = calendar.startOfMonth(for: month)
+        let date = CalendarManager.calendar
+            .startOfMonth(for: month)
         currentLayout = .month
         firstDateInMonthOrWeek = date
     }
@@ -83,30 +72,28 @@ public final class CalendarState {
      The `Date` parameter will be normalized to the first moment of the week.
      */
     private init(withWeekLayout week: Date) {
-        let date = calendar.startOfWeek(for: week)
+        let date = CalendarManager.calendar
+            .startOfWeek(for: week)
         currentLayout = .week
         firstDateInMonthOrWeek = date
     }
     
     /**
-     Factory method for creating state with layout and date.
+     Initialize a calendar state with layout and date.
      
      Date will be normalize to the first moment in the calendar state based on layout.
      */
-    public static func state(withLayout layout: Layout, date: Date) -> CalendarState {
-        let key = Key(layout: layout, date: date)
-        let state = CalendarManager.main.statePool[key]
-        guard let state = state else {
-            var newState: CalendarState
-            if layout == .week {
-                newState = CalendarState(withWeekLayout: date)
-            } else {
-                newState = CalendarState(withMonthLayout: date)
-            }
-            CalendarManager.main.statePool[key] = newState
-            return newState
+    public init(withLayout layout: Layout, date: Date) {
+        switch layout {
+        case .month:
+            self.init(withMonthLayout: date)
+        case .week:
+            self.init(withWeekLayout: date)
         }
-        
-        return state
+    }
+    
+    public static func == (lhs: CalendarState, rhs: CalendarState) -> Bool {
+        return lhs.currentLayout == rhs.currentLayout
+        && lhs.firstDateInMonthOrWeek == rhs.firstDateInMonthOrWeek
     }
 }

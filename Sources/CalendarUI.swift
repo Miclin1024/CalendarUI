@@ -23,9 +23,17 @@ public final class CalendarUI: UIViewController {
         }
     }
     
+    public var currentState: CalendarState {
+        CalendarManager.main.state
+    }
+    
     let headerView = HeaderView()
     
     let timelineView = TimelineContainer()
+    
+    lazy var calendarPageController: CalendarPageController = {
+        CalendarPageController(self)
+    }()
     
     let style = CalendarUIStyle()
     
@@ -40,7 +48,6 @@ public final class CalendarUI: UIViewController {
 extension CalendarUI {
     private func configureViews() {
         
-        // 
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = style.headerBottomSpacing
@@ -52,7 +59,12 @@ extension CalendarUI {
             .inset(by: style.contentInset)
         
         stackView.addArrangedSubview(headerView)
-        stackView.addArrangedSubview(timelineView)
+        
+        addChild(calendarPageController)
+        stackView.addArrangedSubview(calendarPageController.view)
+        calendarPageController.didMove(toParent: self)
+        
+//        stackView.addArrangedSubview(timelineView)
     }
 }
 

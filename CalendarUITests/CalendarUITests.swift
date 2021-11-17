@@ -13,7 +13,7 @@ class CalendarUITests: XCTestCase {
     override func setUpWithError() throws {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(abbreviation: "GMT")!
-        CalendarManager.main.calendar = calendar
+        CalendarManager.calendar = calendar
     }
 
     override func tearDownWithError() throws {

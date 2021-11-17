@@ -10,7 +10,7 @@ import Foundation
 /** Factory class for generating `CalendarDay` objects pertaining to a `CalendarState` */
 final class CalendarDayProvider {
     
-    private static let calendar = CalendarManager.main.calendar
+    private static let calendar = CalendarManager.calendar
     
     /**
      Returns an array of `CalendarDay` that reside within the `CalendarState`.
@@ -20,8 +20,13 @@ final class CalendarDayProvider {
         let layout = calendarState.currentLayout
         
         if layout == .month {
-            return days(from: calendar.startOfMonth(for: date),
-                        through: calendar.endOfMonth(for: date))
+            var result = days(preceding: calendarState)
+            result.append(contentsOf: days(
+                from: calendar.startOfMonth(for: date),
+                through: calendar.endOfMonth(for: date))
+            )
+            result.append(contentsOf: days(following: calendarState))
+            return result
         } else {
             return days(from: calendar.startOfWeek(for: date),
                         through: calendar.endOfWeek(for: date))

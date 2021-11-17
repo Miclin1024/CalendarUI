@@ -18,13 +18,15 @@ class CalendarDayGenerationTests: CalendarUITests {
         try super.setUpWithError()
         
         let formatter = ISO8601DateFormatter()
-        weekLayoutTestState = CalendarState.state(
+        weekLayoutTestState = CalendarState (
             withLayout: .week,
-            date: formatter.date(from: "2021-11-14T00:00:00+0000")!)
+            date: formatter.date(
+                from: "2021-11-14T00:00:00+0000")!)
         
-        monthLayoutTestState = CalendarState.state(
+        monthLayoutTestState = CalendarState(
             withLayout: .month,
-            date: formatter.date(from:"2021-11-1T00:00:00+0000")!)
+            date: formatter.date(
+                from:"2021-11-1T00:00:00+0000")!)
     }
 
     override func tearDownWithError() throws {
@@ -65,10 +67,22 @@ class CalendarDayGenerationTests: CalendarUITests {
         
         days = CalendarDayProvider
             .days(for: monthLayoutTestState)
-        XCTAssertEqual(days.count, 30)
+        XCTAssertEqual(days.count, 35)
         XCTAssertEqual(days[0].date.ISO8601Format(),
-                       "2021-11-01T00:00:00Z")
-        XCTAssertEqual(days[29].date.ISO8601Format(),
-                       "2021-11-30T00:00:00Z")
+                       "2021-10-31T00:00:00Z")
+        XCTAssertEqual(days[34].date.ISO8601Format(),
+                       "2021-12-04T00:00:00Z")
+    }
+    
+    func testIsToday() throws {
+        let days = CalendarDayProvider
+            .days(for: monthLayoutTestState)
+        let calendar = CalendarManager.calendar
+        let today = calendar.startOfDay(for: .now)
+        for day in days {
+            XCTAssertEqual(
+                day.isToday,
+                day.date.compare(today) == .orderedSame)
+        }
     }
 }

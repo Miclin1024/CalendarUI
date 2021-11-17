@@ -27,6 +27,7 @@ final class CalendarPageController: UIPageViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         dataSource = self
+        delegate = self
         
         let initialVC = calendarPage(for: CalendarManager.main.state)
         setViewControllers([initialVC], direction: .forward,
@@ -47,6 +48,14 @@ extension CalendarPageController: UIPageViewControllerDataSource {
         let vc = viewController as! CalendarPageController.Page
         let state = vc.state.next
         return calendarPage(for: state)
+    }
+}
+
+extension CalendarPageController: UIPageViewControllerDelegate {
+    
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        let vc = pageViewController.viewControllers!.first! as! Page
+        CalendarManager.main.state = vc.state
     }
 }
 

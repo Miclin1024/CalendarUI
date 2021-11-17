@@ -5,8 +5,8 @@
 //  Created by Michael Lin on 11/14/21.
 //
 
-import Foundation
 import UIKit
+import Combine
 
 final class HeaderView: UIView {
     
@@ -35,6 +35,8 @@ final class HeaderView: UIView {
     }()
     
     private var spacingConstraint: NSLayoutConstraint!
+    
+    private var titleSubscription: AnyCancellable!
     
     var style = HeaderStyle()
     
@@ -69,6 +71,17 @@ extension HeaderView {
             titleLabel.topAnchor
                 .constraint(equalTo: topAnchor)
         ])
+        
+        titleSubscription = Publishers.CombineLatest(
+            CalendarManager.main.$state, CalendarManager.main.$selectedDates
+        ).sink { [weak self] (state, selectedDates) in
+            guard let self = self else { return }
+            let date = state.firstDateInMonthOrWeek
+            let formatter = DateFormatter()
+            formatter.locale = Locale.current
+            formatter.dateFormat = "MMMM, y"
+            self.titleLabel.text = formatter.string(from: date)
+        }
         
         // Weekday symbols stack view
         addSubview(stackView)

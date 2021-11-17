@@ -51,7 +51,6 @@ extension CalendarPageController {
             calendarCollection = CalendarCollectionView(
                 frame: view.bounds,
                 collectionViewLayout: createLayout())
-            calendarCollection.backgroundColor = .clear
             configureDataSource()
             
             view.addSubview(calendarCollection)

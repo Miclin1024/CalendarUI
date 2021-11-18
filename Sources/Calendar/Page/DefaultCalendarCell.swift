@@ -11,11 +11,21 @@ class DefaultCalendarCell: CalendarCell {
     
     var day: CalendarDay!
     
+    var state: CalendarState!
+    
+    override var isSelected: Bool {
+        didSet {
+            animateSelection()
+        }
+    }
+    
     private let numberLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         return label
     }()
+    
+    private let calendar = CalendarManager.calendar
     
     // TODO: Event Indicator
     
@@ -34,30 +44,72 @@ class DefaultCalendarCell: CalendarCell {
         backgroundView?.layer
             .cornerRadius = selectedBackgroundSize / 2
     }
-    
+}
+
+// MARK: View Configuration
+extension DefaultCalendarCell {
     func configure(using day: CalendarDay,
                    state: CalendarState) {
+        self.day = day
+        self.state = state
+        let date = day.date
+        
         let calendar = CalendarManager.calendar
-        numberLabel.text = "\(calendar.component(.day, from: day.date))"
+        numberLabel.text = "\(calendar.component(.day, from: date))"
         numberLabel.font = style.font
         contentView.addSubview(numberLabel)
         
-        if state.currentLayout == .month {
+        numberLabel.textColor = numberLabelTextColor()
+        
+        backgroundView = UIView()
+        backgroundView?.clipsToBounds = true
+        
+        if day.isToday {
+            backgroundView?.backgroundColor = style.todayBackgroundColor
+            numberLabel.textColor = style.todayTextColor
+        } else {
+            backgroundView?.backgroundColor = style.selectedBackgroundColor
+            backgroundView?.alpha = isSelected ? 1 : 0
+        }
+    }
+    
+    /**
+     Returns the color based on selection status, the underlying calendar day and state.
+     */
+    func numberLabelTextColor() -> UIColor {
+        // If the selected cell is also today, use a lighter version of
+        // selection background for the number text
+        // FIXME: This looks kinda ugly with the default style
+        if isSelected && day.isToday { return style
+            .selectedBackgroundColor.withAlphaComponent(0.5)}
+        
+        if isSelected { return style.selectedTextColor }
+        if day.isToday { return style.todayTextColor }
+        switch state.layout {
+        case .week:
+            return calendar.isDateInWeekend(day.date) ?
+            style.inactiveTextColor : style.textColor
+        case .month:
             let startOfMonth = state.firstDateInMonthOrWeek
             let endOfMonth = calendar.endOfMonth(
                 for: startOfMonth)
             let monthRange = startOfMonth...endOfMonth
-            numberLabel.textColor = monthRange.contains(
-                day.date) ?
+            return monthRange.contains(day.date) ?
             style.textColor : style.inactiveTextColor
-        } else {
-            numberLabel.textColor = style.textColor
         }
+    }
+}
+
+// MARK: Animations
+private extension DefaultCalendarCell {
+    func animateSelection() {
+        numberLabel.textColor = numberLabelTextColor()
         
-        backgroundView = UIView()
-        backgroundView?.clipsToBounds = true
-        backgroundView?
-            .backgroundColor = day.isToday ?
-        style.todayBackgroundColor : style.selectedBackgroundColor
+        // No need to fade out if the selection is today
+        if day.isToday { return }
+        
+        UIView.animate(withDuration: 0.2) {
+            self.backgroundView?.alpha = self.isSelected ? 1 : 0
+        }
     }
 }

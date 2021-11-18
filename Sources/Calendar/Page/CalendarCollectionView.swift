@@ -14,6 +14,7 @@ class CalendarCollectionView: UICollectionView {
         
         backgroundColor = .clear
         isScrollEnabled = false
+        allowsSelection = true
     }
     
     required init?(coder: NSCoder) {

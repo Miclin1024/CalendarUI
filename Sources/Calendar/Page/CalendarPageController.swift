@@ -9,11 +9,11 @@ import UIKit
 
 final class CalendarPageController: UIPageViewController {
     
-    private var pagePool = [CalendarState: Page]()
-    
     var style = CalendarStyle()
     
     unowned var calendarUI: CalendarUI
+    
+    private var pagePool = [CalendarState: Page]()
     
     init(_ calendarUI: CalendarUI) {
         self.calendarUI = calendarUI
@@ -35,7 +35,7 @@ final class CalendarPageController: UIPageViewController {
     }
 }
 
-// MARK: Data Source
+// MARK: Page Controller Data Source
 extension CalendarPageController: UIPageViewControllerDataSource {
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
@@ -51,6 +51,8 @@ extension CalendarPageController: UIPageViewControllerDataSource {
     }
 }
 
+
+// MARK: Page Controller Delegate
 extension CalendarPageController: UIPageViewControllerDelegate {
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
@@ -60,9 +62,9 @@ extension CalendarPageController: UIPageViewControllerDelegate {
 }
 
 // MARK: Page Management
-extension CalendarPageController {
+private extension CalendarPageController {
     
-    private func calendarPage(for state: CalendarState) -> Page {
+    func calendarPage(for state: CalendarState) -> Page {
         if let page = pagePool[state] {
             page.updateViewIfNeeded()
             return page
@@ -73,7 +75,7 @@ extension CalendarPageController {
         return page
     }
     
-    private func resizePool() {
-        // TODO: Evict some pages if the pool gets to large
+    func resizePool() {
+        // TODO: Need to evict some pages if the pool gets too large
     }
 }

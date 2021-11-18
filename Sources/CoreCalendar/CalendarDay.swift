@@ -27,3 +27,9 @@ public struct CalendarDay: Hashable {
 //    public var isInCurrentMonth
 //        public var events: [EventDescriptor] = []
 }
+
+extension CalendarDay: CustomStringConvertible {
+    public var description: String {
+        return "{CalendarDay \(date), isToday: \(isToday)}"
+    }
+}

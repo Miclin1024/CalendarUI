@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A0591612745E24E00AED4E5 /* CalendarLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0591602745E24E00AED4E5 /* CalendarLog.swift */; };
 		1A8075D927430EE300BCB814 /* CalendarPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8075D827430EE300BCB814 /* CalendarPageController.swift */; };
 		1A8075DB274312B200BCB814 /* TimelinePageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8075DA274312B200BCB814 /* TimelinePageController.swift */; };
 		1A8075DD27432EE100BCB814 /* EventDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8075DC27432EE100BCB814 /* EventDescriptor.swift */; };
@@ -61,6 +62,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A0591602745E24E00AED4E5 /* CalendarLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarLog.swift; sourceTree = "<group>"; };
 		1A8075D827430EE300BCB814 /* CalendarPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPageController.swift; sourceTree = "<group>"; };
 		1A8075DA274312B200BCB814 /* TimelinePageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelinePageController.swift; sourceTree = "<group>"; };
 		1A8075DC27432EE100BCB814 /* EventDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDescriptor.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 			children = (
 				1A9DCBCE2741BAF800A1DC84 /* CalendarDayProvider.swift */,
 				1A8075E7274353CD00BCB814 /* ReusePool.swift */,
+				1A0591602745E24E00AED4E5 /* CalendarLog.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -435,6 +438,7 @@
 				1A9DCBCF2741BAF800A1DC84 /* CalendarDayProvider.swift in Sources */,
 				1A8075E527434DD900BCB814 /* CalendarCollectionView.swift in Sources */,
 				1A9DCBE72742437900A1DC84 /* CalendarManager.swift in Sources */,
+				1A0591612745E24E00AED4E5 /* CalendarLog.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

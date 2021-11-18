@@ -5,7 +5,6 @@
 //  Created by Michael Lin on 11/14/21.
 //
 
-import Foundation
 import UIKit
 
 extension CalendarPageController {
@@ -52,6 +51,7 @@ extension CalendarPageController {
                 frame: view.bounds,
                 collectionViewLayout: createLayout())
             configureDataSource()
+            calendarCollection.delegate = self
             
             view.addSubview(calendarCollection)
         }
@@ -64,9 +64,9 @@ extension CalendarPageController {
 }
 
 // MARK: Collection View Layout
-extension CalendarPageController.Page {
+private extension CalendarPageController.Page {
     
-    private func createLayout() -> UICollectionViewCompositionalLayout {
+    func createLayout() -> UICollectionViewCompositionalLayout {
         return UICollectionViewCompositionalLayout { index, environment in
             let itemSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1/7),
@@ -87,9 +87,9 @@ extension CalendarPageController.Page {
 }
 
 // MARK: Collection View Data Source
-extension CalendarPageController.Page {
+private extension CalendarPageController.Page {
     
-    private func configureDataSource() {
+    func configureDataSource() {
         let registration = UICollectionView.CellRegistration<
             DefaultCalendarCell, CalendarDay
         >() { [unowned self] cell, indexPath, day in
@@ -106,8 +106,10 @@ extension CalendarPageController.Page {
                 return customCellDataSource.calendar(
                     self.calendarUI, cellForDay: day)
             }
-            return cv.dequeueConfiguredReusableCell(
+            let cell = cv.dequeueConfiguredReusableCell(
                 using: registration, for: indexPath, item: day)
+            cell.style = self.style
+            return cell
         }
         
         let snapshot = generateSnapshot()
@@ -121,6 +123,31 @@ extension CalendarPageController.Page {
         let days = CalendarDayProvider.days(for: state)
         snapshot.appendItems(days)
         return snapshot
+    }
+}
+
+// MARK: Collection View Delegate
+extension CalendarPageController.Page: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let day = dataSource.itemIdentifier(for: indexPath) else {
+            return
+        }
+        CalendarManager.main.selectedDates.insert(day)
+        CalendarLog.send("Selected \(day)", level: .info)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        guard let day = dataSource.itemIdentifier(for: indexPath) else {
+            return
+        }
+        // Log a warning message if no day was removed from manager
+        if CalendarManager.main.selectedDates.remove(day) == nil {
+            CalendarLog.send("Calendar day not found in state management",
+                             level: .warning)
+        } else {
+            CalendarLog.send("Deselected \(day)", level: .info)
+        }
     }
 }
 

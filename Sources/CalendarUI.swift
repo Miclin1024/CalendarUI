@@ -45,8 +45,8 @@ public final class CalendarUI: UIViewController {
 }
 
 // MARK: - View Configuration
-extension CalendarUI {
-    private func configureViews() {
+private extension CalendarUI {
+    func configureViews() {
         
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -69,8 +69,8 @@ extension CalendarUI {
 }
 
 // MARK: - CalendarCell Registration
-extension CalendarUI {
-    public struct CellRegistration<Cell> where Cell: CalendarCell {
+public extension CalendarUI {
+    struct CellRegistration<Cell> where Cell: CalendarCell {
         
         public typealias Handler = (_ cell: Cell, _ day: CalendarDay) -> Void
         
@@ -85,8 +85,8 @@ extension CalendarUI {
 }
 
 // MARK: - CalendarCell Dequeue
-extension CalendarUI {
-    public func dequeueConfiguredReusableCell<Cell>(using registration: CellRegistration<Cell>, day: CalendarDay) -> Cell where Cell: CalendarCell {
+public extension CalendarUI {
+    func dequeueConfiguredReusableCell<Cell>(using registration: CellRegistration<Cell>, day: CalendarDay) -> Cell where Cell: CalendarCell {
         let pool = CalendarManager.main.calendarCellReusePool
         guard let cell = pool.dequeue() as? Cell else {
             fatalError("Multi-cell calendar currently not supported")

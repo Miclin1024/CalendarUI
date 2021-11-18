@@ -56,8 +56,9 @@ final class HeaderView: UIView {
 }
 
 // MARK: - View Configuration
-extension HeaderView {
-    private func configureViews() {
+private extension HeaderView {
+    
+    func configureViews() {
         
         // Title Label
         titleLabel.textColor = style.titleColor
@@ -76,6 +77,7 @@ extension HeaderView {
             CalendarManager.main.$state, CalendarManager.main.$selectedDates
         ).sink { [weak self] (state, selectedDates) in
             guard let self = self else { return }
+            let prevDate = CalendarManager.main.state.firstDateInMonthOrWeek
             let date = state.firstDateInMonthOrWeek
             let formatter = DateFormatter()
             formatter.locale = Locale.current
@@ -107,5 +109,17 @@ extension HeaderView {
             label.text = symbol
             self.stackView.addArrangedSubview(label)
         }
+    }
+}
+
+// MARK: Animations
+private extension HeaderView {
+    
+    enum TitleFadeTransitionDirection {
+        case left, right
+    }
+    
+    func titleFadeTransition(from direction: TitleFadeTransitionDirection, newTextValue: String) {
+        // TODO: Title transition animation
     }
 }

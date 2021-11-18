@@ -5,7 +5,6 @@
 //  Created by Michael Lin on 11/14/21.
 //
 
-import Foundation
 import Combine
 
 final class CalendarManager {
@@ -21,7 +20,7 @@ final class CalendarManager {
     
     @Published var isTimelineEnabled: Bool = false
     
-    @Published var selectedDates = [Date]()
+    @Published var selectedDates = Set<CalendarDay>()
     
     var calendarCellReusePool = ReusePool<CalendarCell>()
 }

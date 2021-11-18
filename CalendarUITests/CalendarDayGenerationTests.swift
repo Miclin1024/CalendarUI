@@ -75,10 +75,13 @@ class CalendarDayGenerationTests: CalendarUITests {
     }
     
     func testIsToday() throws {
-        let days = CalendarDayProvider
-            .days(for: monthLayoutTestState)
+        let state = CalendarState(withLayout: .month, date: .now)
+        let days = CalendarDayProvider.days(for: state)
         let calendar = CalendarManager.calendar
         let today = calendar.startOfDay(for: .now)
+        XCTAssertEqual(
+            days.filter{ $0.isToday }.count, 1)
+        
         for day in days {
             XCTAssertEqual(
                 day.isToday,

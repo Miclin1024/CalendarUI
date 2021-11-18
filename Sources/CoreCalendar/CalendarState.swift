@@ -20,7 +20,7 @@ public struct CalendarState: Hashable {
     }
     
     /** The active calendar layout */
-    public var currentLayout: Layout
+    public var layout: Layout
     
     /** The first moment in the current calendar layout, as a `Date`*/
     public var firstDateInMonthOrWeek: Date
@@ -28,7 +28,7 @@ public struct CalendarState: Hashable {
     /** The previous calendar state based on the current layout. */
     var prev: CalendarState {
         var date: Date
-        if currentLayout == .week {
+        if layout == .week {
             date = CalendarManager.calendar
                 .date(byAdding: .day,
                       value: -7, to: firstDateInMonthOrWeek)!
@@ -37,13 +37,13 @@ public struct CalendarState: Hashable {
                 .date(byAdding: .month,
                       value: -1, to: firstDateInMonthOrWeek)!
         }
-        return CalendarState(withLayout: currentLayout, date: date)
+        return CalendarState(withLayout: layout, date: date)
     }
     
     /** The next calendar state based on the current layout. */
     var next: CalendarState {
         var date: Date
-        if currentLayout == .week {
+        if layout == .week {
             date = CalendarManager.calendar
                 .date(byAdding: .day, value: 7, to: firstDateInMonthOrWeek)!
         } else {
@@ -51,7 +51,7 @@ public struct CalendarState: Hashable {
                 .date(byAdding: .month,
                       value: 1, to: firstDateInMonthOrWeek)!
         }
-        return CalendarState(withLayout: currentLayout, date: date)
+        return CalendarState(withLayout: layout, date: date)
     }
     
     /**
@@ -62,7 +62,7 @@ public struct CalendarState: Hashable {
     private init(withMonthLayout month: Date) {
         let date = CalendarManager.calendar
             .startOfMonth(for: month)
-        currentLayout = .month
+        layout = .month
         firstDateInMonthOrWeek = date
     }
     
@@ -74,7 +74,7 @@ public struct CalendarState: Hashable {
     private init(withWeekLayout week: Date) {
         let date = CalendarManager.calendar
             .startOfWeek(for: week)
-        currentLayout = .week
+        layout = .week
         firstDateInMonthOrWeek = date
     }
     
@@ -93,7 +93,7 @@ public struct CalendarState: Hashable {
     }
     
     public static func == (lhs: CalendarState, rhs: CalendarState) -> Bool {
-        return lhs.currentLayout == rhs.currentLayout
+        return lhs.layout == rhs.layout
         && lhs.firstDateInMonthOrWeek == rhs.firstDateInMonthOrWeek
     }
 }

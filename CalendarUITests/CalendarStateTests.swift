@@ -35,11 +35,11 @@ class CalendarStateTests: CalendarUITests {
     func testStateTransitionMonth() throws {
         let current = CalendarState(withLayout: .month, date: testDate)
         let next = current.next
-        XCTAssertTrue(next.currentLayout == .month)
+        XCTAssertTrue(next.layout == .month)
         XCTAssertEqual(next.firstDateInMonthOrWeek.ISO8601Format(),
                        "2021-12-01T00:00:00Z")
         let prev = current.prev
-        XCTAssertTrue(prev.currentLayout == .month)
+        XCTAssertTrue(prev.layout == .month)
         XCTAssertEqual(prev.firstDateInMonthOrWeek.ISO8601Format(),
                        "2021-10-01T00:00:00Z")
     }
@@ -47,11 +47,11 @@ class CalendarStateTests: CalendarUITests {
     func testStateTransitionWeek() throws {
         let current = CalendarState(withLayout: .week, date: testDate)
         let next = current.next
-        XCTAssertTrue(next.currentLayout == .week)
+        XCTAssertTrue(next.layout == .week)
         XCTAssertEqual(next.firstDateInMonthOrWeek.ISO8601Format(),
                        "2021-11-21T00:00:00Z")
         let prev = current.prev
-        XCTAssertTrue(prev.currentLayout == .week)
+        XCTAssertTrue(prev.layout == .week)
         XCTAssertEqual(prev.firstDateInMonthOrWeek.ISO8601Format(),
                        "2021-11-07T00:00:00Z")
     }

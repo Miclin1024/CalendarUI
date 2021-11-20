@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 final class CalendarPageController: UIPageViewController {
     
@@ -15,9 +16,13 @@ final class CalendarPageController: UIPageViewController {
     
     private var pagePool = [CalendarState: Page]()
     
+    private var stateSubscription: AnyCancellable!
+    
     init(_ calendarUI: CalendarUI) {
         self.calendarUI = calendarUI
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+        CalendarManager.main.allowMultipleSelection =
+            style.allowMultipleSelection
     }
     
     required init?(coder: NSCoder) {
@@ -32,6 +37,12 @@ final class CalendarPageController: UIPageViewController {
         let initialVC = calendarPage(for: CalendarManager.main.state)
         setViewControllers([initialVC], direction: .forward,
                            animated: false, completion: nil)
+        
+//        stateSubscription = CalendarManager.main.$state
+//            .dropFirst()
+//            .sink { state in
+//
+//            }
     }
 }
 
@@ -59,6 +70,14 @@ extension CalendarPageController: UIPageViewControllerDelegate {
         let vc = pageViewController.viewControllers!.first! as! Page
         CalendarManager.main.state = vc.state
     }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
+        for vc in pendingViewControllers
+            .compactMap({$0 as? Page}) {
+            // FIXME: Update animation can be seen while transitioning
+            vc.updateViewIfNeeded()
+        }
+    }
 }
 
 // MARK: Page Management
@@ -66,7 +85,6 @@ private extension CalendarPageController {
     
     func calendarPage(for state: CalendarState) -> Page {
         if let page = pagePool[state] {
-            page.updateViewIfNeeded()
             return page
         }
         
@@ -76,6 +94,6 @@ private extension CalendarPageController {
     }
     
     func resizePool() {
-        // TODO: Need to evict some pages if the pool gets too large
+        // TODO: Need to evict some pages if the pool gets too large. This should also trigger the recycle of cell within that page
     }
 }

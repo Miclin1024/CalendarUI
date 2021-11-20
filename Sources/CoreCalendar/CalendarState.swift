@@ -54,6 +54,16 @@ public struct CalendarState: Hashable {
         return CalendarState(withLayout: layout, date: date)
     }
     
+    /** The range of dates that the state contains*/
+    var dateRange: ClosedRange<Date> {
+        let calendar = CalendarManager.calendar
+        let startRange = firstDateInMonthOrWeek
+        let endRange = layout == .week ?
+            calendar.endOfWeek(for: startRange) :
+            calendar.endOfMonth(for: startRange)
+        return startRange...endRange
+    }
+    
     /**
      Initialize a calendar state using the month layout.
      

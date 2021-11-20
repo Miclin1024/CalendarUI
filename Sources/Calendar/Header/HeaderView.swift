@@ -74,7 +74,7 @@ private extension HeaderView {
         ])
         
         titleSubscription = Publishers.CombineLatest(
-            CalendarManager.main.$state, CalendarManager.main.$selectedDates
+            CalendarManager.main.$state, CalendarManager.main.$selectedDays
         ).sink { [weak self] (state, selectedDates) in
             guard let self = self else { return }
             let prevDate = CalendarManager.main.state.firstDateInMonthOrWeek

@@ -20,7 +20,22 @@ final class CalendarManager {
     
     @Published var isTimelineEnabled: Bool = false
     
-    @Published var selectedDates = Set<CalendarDay>()
+    @Published private(set) var selectedDays = Set<CalendarDay>()
     
     var calendarCellReusePool = ReusePool<CalendarCell>()
+    
+    var allowMultipleSelection = false
+    
+    func handleUserSelectDay(_ day: CalendarDay) {
+        if allowMultipleSelection {
+            selectedDays.update(with: day)
+        } else {
+            selectedDays.removeAll()
+            selectedDays.update(with: day)
+        }
+    }
+    
+    func handleUserDeselectDay(_ day: CalendarDay) -> Bool {
+        return selectedDays.remove(day) != nil
+    }
 }

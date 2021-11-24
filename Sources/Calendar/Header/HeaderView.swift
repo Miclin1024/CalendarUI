@@ -38,20 +38,26 @@ final class HeaderView: UIView {
     
     private var titleSubscription: AnyCancellable!
     
-    var style = HeaderStyle()
+    var configuration: Configuration.HeaderConfiguration
     
     override var intrinsicContentSize: CGSize {
         let height = titleLabel.intrinsicContentSize.height
-        + style.spacing
+        + configuration.spacing
         + weekdaySymbolLabels.first!.intrinsicContentSize.height
         return CGSize(width: UIView.noIntrinsicMetric, height: height)
     }
     
-    convenience init() {
-        self.init(frame: .zero)
+    init(configuration: Configuration.HeaderConfiguration = .init()) {
+        self.configuration = configuration
+        super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         setContentHuggingPriority(.defaultHigh + 1, for: .vertical)
         configureViews()
+    }
+    
+    required init?(coder: NSCoder) {
+        self.configuration = .init()
+        super.init(coder: coder)
     }
 }
 
@@ -61,8 +67,8 @@ private extension HeaderView {
     func configureViews() {
         
         // Title Label
-        titleLabel.textColor = style.titleColor
-        titleLabel.font = style.titleFont
+        titleLabel.textColor = configuration.titleColor
+        titleLabel.font = configuration.titleFont
         addSubview(titleLabel)
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor
@@ -89,7 +95,7 @@ private extension HeaderView {
         addSubview(stackView)
         spacingConstraint = stackView.topAnchor
             .constraint(equalTo: titleLabel.bottomAnchor,
-                        constant: style.spacing)
+                        constant: configuration.spacing)
         spacingConstraint.isActive = true
         
         NSLayoutConstraint.activate([
@@ -101,11 +107,11 @@ private extension HeaderView {
                 .constraint(equalTo: bottomAnchor)
         ])
         
-        for (idx, symbol) in style.symbolStyle
+        for (idx, symbol) in configuration.symbolStyle
                 .symbols.enumerated() {
             let label = weekdaySymbolLabels[idx]
-            label.textColor = style.symbolColor
-            label.font = style.symbolFont
+            label.textColor = configuration.symbolColor
+            label.font = configuration.symbolFont
             label.text = symbol
             self.stackView.addArrangedSubview(label)
         }

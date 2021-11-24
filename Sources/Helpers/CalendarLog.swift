@@ -18,11 +18,11 @@ class CalendarLog {
         fileprivate var prefix: String {
             switch self {
             case .info:
-                return "[CalendarUI Info] "
+                return "[CalendarUI] Info: "
             case .warning:
-                return "[CalendarUI Warning] "
+                return "[CalendarUI] Warning: "
             case .error:
-                return "[CalendarUI Error] "
+                return "[CalendarUI] Error: "
             }
         }
         

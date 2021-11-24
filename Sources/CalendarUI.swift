@@ -27,18 +27,39 @@ public final class CalendarUI: UIViewController {
         CalendarManager.main.state
     }
     
-    let headerView = HeaderView()
+    var headerView: HeaderView!
     
-    let timelineView = TimelineContainer()
+    var timelineView: TimelineContainer!
     
-    lazy var calendarPageController: CalendarPageController = {
-        CalendarPageController(self)
-    }()
+    var calendarPageController: CalendarPageController!
     
-    let style = CalendarUIStyle()
+    let configuration: Configuration
+    
+    public init(configuration: Configuration = .init()) {
+        self.configuration = configuration
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        self.configuration = Configuration()
+        
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    required init?(coder: NSCoder) {
+        self.configuration = Configuration()
+        
+        super.init(coder: coder)
+    }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        headerView = HeaderView(
+            configuration: configuration.headerConfiguration)
+        calendarPageController = CalendarPageController(self)
+        timelineView = TimelineContainer()
+        
         
         configureViews()
     }
@@ -50,13 +71,13 @@ private extension CalendarUI {
         
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = style.headerBottomSpacing
+        stackView.spacing = configuration.headerBottomSpacing
         stackView.distribution = .fill
         stackView.alignment = .fill
         
         view.addSubview(stackView)
         stackView.frame = view.bounds
-            .inset(by: style.contentInset)
+            .inset(by: configuration.contentInset)
         
         stackView.addArrangedSubview(headerView)
         

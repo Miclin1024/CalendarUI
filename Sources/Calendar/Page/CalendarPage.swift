@@ -19,7 +19,7 @@ extension CalendarPageController {
         
         var state: CalendarState
         
-        var style = CalendarStyle()
+        var configuration = Configuration.CalendarConfiguration()
         
         var calendarCollection: CalendarCollectionView!
         
@@ -108,8 +108,8 @@ extension CalendarPageController.Page {
             }
         }
         
-        selectDays(Array(daysToSelect))
-        deselectDays(Array(daysToDeselect))
+        selectDays(Array(daysToSelect), animated: false)
+        deselectDays(Array(daysToDeselect), animated: false)
     }
     
     /**
@@ -117,7 +117,7 @@ extension CalendarPageController.Page {
      
      The method will silently fail if the page doesn't contain any of the days in the argument. However, atomicity is not enforced.
      */
-    func selectDays(_ days: [CalendarDay]) {
+    func selectDays(_ days: [CalendarDay], animated: Bool) {
         let range = state.dateRange
         
         for day in days {
@@ -136,7 +136,7 @@ extension CalendarPageController.Page {
             }
             
             calendarCollection.selectItem(
-                at: indexPath, animated: false,
+                at: indexPath, animated: animated,
                 scrollPosition: .centeredHorizontally)
         }
     }
@@ -146,7 +146,7 @@ extension CalendarPageController.Page {
      
      The method will silently fail if the page doesn't contain any of the days in the argument. However, atomicity is not enforced.
      */
-    func deselectDays(_ days: [CalendarDay]) {
+    func deselectDays(_ days: [CalendarDay], animated: Bool) {
         let range = state.dateRange
         
         for day in days {
@@ -165,7 +165,7 @@ extension CalendarPageController.Page {
             }
             
             calendarCollection.deselectItem(
-                at: indexPath, animated: false)
+                at: indexPath, animated: animated)
         }
     }
 }
@@ -177,12 +177,12 @@ private extension CalendarPageController.Page {
         return UICollectionViewCompositionalLayout { index, environment in
             let itemSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1/7),
-                heightDimension: .fractionalWidth(1/7/self.style.aspectRatio))
+                heightDimension: .fractionalWidth(1/7/self.configuration.aspectRatio))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             
             let groupSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalWidth(1/7/self.style.aspectRatio))
+                heightDimension: .fractionalWidth(1/7/self.configuration.aspectRatio))
             let group = NSCollectionLayoutGroup.horizontal(
                 layoutSize: groupSize,
                 subitem: item, count: 7)
@@ -200,7 +200,7 @@ private extension CalendarPageController.Page {
         let registration = UICollectionView.CellRegistration<
             DefaultCalendarCell, CalendarDay
         >() { [unowned self] cell, indexPath, day in
-            cell.style = self.style
+            cell.configuration = self.configuration
             cell.configure(using: day, state: self.state)
         }
         
@@ -215,7 +215,7 @@ private extension CalendarPageController.Page {
             }
             let cell = cv.dequeueConfiguredReusableCell(
                 using: registration, for: indexPath, item: day)
-            cell.style = self.style
+            cell.configuration = self.configuration
             return cell
         }
         

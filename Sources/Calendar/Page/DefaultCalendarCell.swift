@@ -56,7 +56,7 @@ extension DefaultCalendarCell {
         
         let calendar = CalendarManager.calendar
         numberLabel.text = "\(calendar.component(.day, from: date))"
-        numberLabel.font = style.font
+        numberLabel.font = configuration.font
         contentView.addSubview(numberLabel)
         
         numberLabel.textColor = numberLabelTextColor()
@@ -65,10 +65,10 @@ extension DefaultCalendarCell {
         backgroundView?.clipsToBounds = true
         
         if day.isToday {
-            backgroundView?.backgroundColor = style.todayBackgroundColor
-            numberLabel.textColor = style.todayTextColor
+            backgroundView?.backgroundColor = configuration.todayBackgroundColor
+            numberLabel.textColor = configuration.todayTextColor
         } else {
-            backgroundView?.backgroundColor = style.selectedBackgroundColor
+            backgroundView?.backgroundColor = configuration.selectedBackgroundColor
             backgroundView?.alpha = isSelected ? 1 : 0
         }
     }
@@ -80,22 +80,22 @@ extension DefaultCalendarCell {
         // If the selected cell is also today, use a lighter version of
         // selection background for the number text
         // FIXME: This looks kinda ugly with the default style
-        if isSelected && day.isToday { return style
+        if isSelected && day.isToday { return configuration
             .selectedBackgroundColor.withAlphaComponent(0.5)}
         
-        if isSelected { return style.selectedTextColor }
-        if day.isToday { return style.todayTextColor }
+        if isSelected { return configuration.selectedTextColor }
+        if day.isToday { return configuration.todayTextColor }
         switch state.layout {
         case .week:
             return calendar.isDateInWeekend(day.date) ?
-            style.inactiveTextColor : style.textColor
+            configuration.inactiveTextColor : configuration.textColor
         case .month:
             let startOfMonth = state.firstDateInMonthOrWeek
             let endOfMonth = calendar.endOfMonth(
                 for: startOfMonth)
             let monthRange = startOfMonth...endOfMonth
             return monthRange.contains(day.date) ?
-            style.textColor : style.inactiveTextColor
+            configuration.textColor : configuration.inactiveTextColor
         }
     }
 }

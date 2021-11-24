@@ -39,8 +39,6 @@ extension CalendarPageController {
         
         override func loadView() {
             super.loadView()
-            
-            
         }
         
         override func viewDidLoad() {
@@ -235,6 +233,14 @@ private extension CalendarPageController.Page {
 
 // MARK: Collection View Delegate
 extension CalendarPageController.Page: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        guard let day = dataSource.itemIdentifier(for: indexPath) else {
+            return false
+        }
+        
+        return state.dateRange.contains(day.date)
+    }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let day = dataSource.itemIdentifier(for: indexPath) else {

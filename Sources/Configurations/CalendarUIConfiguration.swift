@@ -14,7 +14,7 @@ public extension CalendarUI {
     /**
      The root configuration object for `CalendarUI`.
      */
-    struct Configuration {
+    struct Configuration: Equatable {
         
         public var headerConfiguration = HeaderConfiguration()
         

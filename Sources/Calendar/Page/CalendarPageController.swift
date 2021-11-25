@@ -10,7 +10,7 @@ import Combine
 
 final class CalendarPageController: UIPageViewController {
     
-    var configuration = Configuration.CalendarConfiguration()
+    var configuration: Configuration.CalendarConfiguration
     
     unowned var calendarUI: CalendarUI
     
@@ -20,7 +20,9 @@ final class CalendarPageController: UIPageViewController {
     
     init(_ calendarUI: CalendarUI) {
         self.calendarUI = calendarUI
-        super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+        self.configuration = calendarUI.configuration.calendarConfiguration
+        super.init(transitionStyle: .scroll,
+                   navigationOrientation: .horizontal, options: nil)
         CalendarManager.main.allowMultipleSelection =
             configuration.allowMultipleSelection
     }
@@ -75,8 +77,16 @@ extension CalendarPageController: UIPageViewControllerDelegate {
         for vc in pendingViewControllers
             .compactMap({$0 as? Page}) {
             // FIXME: Deselect animation can be seen while transitioning between pages
-            vc.updateViewIfNeeded()
+            vc.updateViewsIfNeeded()
         }
+    }
+}
+
+// MARK: State Transition and Configuration Update
+extension CalendarPageController {
+    func updateConfiguration(_ configuration: Configuration.CalendarConfiguration) {
+        self.configuration = configuration
+        pagePool.values.forEach { $0.configuration = configuration }
     }
 }
 

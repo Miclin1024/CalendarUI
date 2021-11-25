@@ -19,7 +19,13 @@ extension CalendarPageController {
         
         var state: CalendarState
         
-        var configuration = Configuration.CalendarConfiguration()
+        var configuration: Configuration.CalendarConfiguration {
+            didSet {
+                if oldValue != configuration {
+                    setNeedsUpdateViews()
+                }
+            }
+        }
         
         var calendarCollection: CalendarCollectionView!
         
@@ -27,9 +33,12 @@ extension CalendarPageController {
             Section, CalendarDay
         >!
         
+        private var needsUpdateViews = false
+        
         init(_ calendarUI: CalendarUI, state: CalendarState) {
             self.calendarUI = calendarUI
             self.state = state
+            self.configuration = calendarUI.configuration.calendarConfiguration
             super.init(nibName: nil, bundle: nil)
         }
         
@@ -43,6 +52,7 @@ extension CalendarPageController {
         
         override func viewDidLoad() {
             super.viewDidLoad()
+            
             view.backgroundColor = .clear
             
             calendarCollection = CalendarCollectionView(
@@ -52,6 +62,10 @@ extension CalendarPageController {
             calendarCollection.delegate = self
             
             view.addSubview(calendarCollection)
+            
+            let _ = CalendarManager.main.$selectedDays.sink { _ in
+                self.setNeedsUpdateViews()
+            }
         }
         
         override func viewDidLayoutSubviews() {
@@ -67,15 +81,21 @@ extension CalendarPageController.Page {
     /**
      Update the calendar view immediately.
      
-     This includes performing any layout updates, syncing the day selections, etc.
+     This includes performing any layout updates, day selections sync, etc.
      */
-    func updateViewIfNeeded() {
-        let range = state.dateRange
-        let syncDays = CalendarManager.main.selectedDays
-            .filter { range.contains($0.date) }
-        syncCalendarSelection(withDays: syncDays)
+    func updateViewsIfNeeded() {
+        if needsUpdateViews {
+            let range = state.dateRange
+            let syncDays = CalendarManager.main.selectedDays
+                .filter { range.contains($0.date) }
+            syncCalendarSelection(withDays: syncDays)
 
-        // TODO: Finish this function
+            calendarCollection.allowsMultipleSelection = configuration.allowMultipleSelection
+        }
+    }
+    
+    private func setNeedsUpdateViews() {
+        needsUpdateViews = true
     }
     
     /**

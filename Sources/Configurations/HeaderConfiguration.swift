@@ -10,7 +10,7 @@ import UIKit
 /**
  Weekday symbol style used in `HeaderView`.
  */
-public enum WeekdaySymbolStyle {
+public enum WeekdaySymbolStyle: Equatable {
     /** Standalone weekday names. */
     case regular
     
@@ -47,7 +47,7 @@ public extension CalendarUI.Configuration {
     /**
      Configuration object for the calendar's header view.
      */
-    struct HeaderConfiguration {
+    struct HeaderConfiguration: Equatable {        
         
         public var symbolStyle: WeekdaySymbolStyle = .veryShort
         

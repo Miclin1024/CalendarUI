@@ -9,7 +9,7 @@ import UIKit
 
 public extension CalendarUI.Configuration {
     
-    struct CalendarConfiguration {
+    struct CalendarConfiguration: Equatable {
         
         public var backgroundColor = UIColor.clear
         

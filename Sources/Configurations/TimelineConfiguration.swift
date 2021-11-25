@@ -9,7 +9,7 @@ import UIKit
 
 public extension CalendarUI.Configuration {
     
-    struct TimelineConfiguration {
+    struct TimelineConfiguration: Equatable {
         
         public var allDayConfiguration = AllDayViewConfiguration()
         
@@ -42,7 +42,7 @@ public extension CalendarUI.Configuration {
         public init() {}
     }
     
-    struct CurrentTimeIndicatorConfiguration {
+    struct CurrentTimeIndicatorConfiguration: Equatable {
         
         public var color = UIColor.systemRed
         
@@ -53,7 +53,7 @@ public extension CalendarUI.Configuration {
         public init() {}
     }
 
-    struct AllDayViewConfiguration {
+    struct AllDayViewConfiguration: Equatable {
         
         public var backgroundColor: UIColor = UIColor.clear
         

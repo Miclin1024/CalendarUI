@@ -126,8 +126,10 @@ extension CalendarPageController.Page {
             }
         }
         
-        selectDays(Array(daysToSelect), animated: false)
-        deselectDays(Array(daysToDeselect), animated: false)
+        UIView.performWithoutAnimation {
+            selectDays(Array(daysToSelect), animated: false)
+            deselectDays(Array(daysToDeselect), animated: false)
+        }
     }
     
     /**

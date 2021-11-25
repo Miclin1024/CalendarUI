@@ -76,7 +76,6 @@ extension CalendarPageController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
         for vc in pendingViewControllers
             .compactMap({$0 as? Page}) {
-            // FIXME: Deselect animation can be seen while transitioning between pages
             vc.updateViewsIfNeeded()
         }
     }

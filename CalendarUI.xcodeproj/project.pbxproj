@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1A0591612745E24E00AED4E5 /* CalendarLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0591602745E24E00AED4E5 /* CalendarLog.swift */; };
+		1A38370127506EF8007832CF /* OutlineItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A38370027506EF8007832CF /* OutlineItem.swift */; };
 		1A8075D927430EE300BCB814 /* CalendarPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8075D827430EE300BCB814 /* CalendarPageController.swift */; };
 		1A8075DB274312B200BCB814 /* TimelinePageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8075DA274312B200BCB814 /* TimelinePageController.swift */; };
 		1A8075DD27432EE100BCB814 /* EventDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8075DC27432EE100BCB814 /* EventDescriptor.swift */; };
@@ -25,7 +26,7 @@
 		1A9DCBAF2741A0A600A1DC84 /* CalendarUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9DCBAE2741A0A600A1DC84 /* CalendarUI.swift */; };
 		1A9DCBB92741B42500A1DC84 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9DCBB82741B42500A1DC84 /* AppDelegate.swift */; };
 		1A9DCBBB2741B42500A1DC84 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9DCBBA2741B42500A1DC84 /* SceneDelegate.swift */; };
-		1A9DCBBD2741B42500A1DC84 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9DCBBC2741B42500A1DC84 /* ViewController.swift */; };
+		1A9DCBBD2741B42500A1DC84 /* OutlineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9DCBBC2741B42500A1DC84 /* OutlineViewController.swift */; };
 		1A9DCBC02741B42500A1DC84 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A9DCBBE2741B42500A1DC84 /* Main.storyboard */; };
 		1A9DCBC22741B42600A1DC84 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A9DCBC12741B42600A1DC84 /* Assets.xcassets */; };
 		1A9DCBC52741B42600A1DC84 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A9DCBC32741B42600A1DC84 /* LaunchScreen.storyboard */; };
@@ -78,6 +79,7 @@
 
 /* Begin PBXFileReference section */
 		1A0591602745E24E00AED4E5 /* CalendarLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarLog.swift; sourceTree = "<group>"; };
+		1A38370027506EF8007832CF /* OutlineItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineItem.swift; sourceTree = "<group>"; };
 		1A8075D827430EE300BCB814 /* CalendarPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPageController.swift; sourceTree = "<group>"; };
 		1A8075DA274312B200BCB814 /* TimelinePageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelinePageController.swift; sourceTree = "<group>"; };
 		1A8075DC27432EE100BCB814 /* EventDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDescriptor.swift; sourceTree = "<group>"; };
@@ -97,7 +99,7 @@
 		1A9DCBB62741B42500A1DC84 /* CalendarUISampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CalendarUISampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A9DCBB82741B42500A1DC84 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1A9DCBBA2741B42500A1DC84 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		1A9DCBBC2741B42500A1DC84 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		1A9DCBBC2741B42500A1DC84 /* OutlineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineViewController.swift; sourceTree = "<group>"; };
 		1A9DCBBF2741B42500A1DC84 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1A9DCBC12741B42600A1DC84 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A9DCBC42741B42600A1DC84 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -143,6 +145,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A38370227506FBF007832CF /* Outline */ = {
+			isa = PBXGroup;
+			children = (
+				1A38370027506EF8007832CF /* OutlineItem.swift */,
+				1A9DCBBC2741B42500A1DC84 /* OutlineViewController.swift */,
+			);
+			path = Outline;
+			sourceTree = "<group>";
+		};
+		1A38370327508531007832CF /* Calendars */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Calendars;
+			sourceTree = "<group>";
+		};
 		1A8075E227434D1F00BCB814 /* Header */ = {
 			isa = PBXGroup;
 			children = (
@@ -236,9 +254,10 @@
 		1A9DCBB72741B42500A1DC84 /* CalendarUISampleApp */ = {
 			isa = PBXGroup;
 			children = (
+				1A38370327508531007832CF /* Calendars */,
+				1A38370227506FBF007832CF /* Outline */,
 				1A9DCBB82741B42500A1DC84 /* AppDelegate.swift */,
 				1A9DCBBA2741B42500A1DC84 /* SceneDelegate.swift */,
-				1A9DCBBC2741B42500A1DC84 /* ViewController.swift */,
 				1A9DCBBE2741B42500A1DC84 /* Main.storyboard */,
 				1A9DCBC12741B42600A1DC84 /* Assets.xcassets */,
 				1A9DCBC32741B42600A1DC84 /* LaunchScreen.storyboard */,
@@ -472,9 +491,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A9DCBBD2741B42500A1DC84 /* ViewController.swift in Sources */,
+				1A9DCBBD2741B42500A1DC84 /* OutlineViewController.swift in Sources */,
 				1A9DCBB92741B42500A1DC84 /* AppDelegate.swift in Sources */,
 				1A9DCBBB2741B42500A1DC84 /* SceneDelegate.swift in Sources */,
+				1A38370127506EF8007832CF /* OutlineItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

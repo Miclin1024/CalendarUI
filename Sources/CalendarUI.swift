@@ -36,20 +36,20 @@ public final class CalendarUI: UIViewController {
     let configuration: Configuration
     
     public init(configuration: Configuration = .init()) {
+        CalendarManager.initialize()
         self.configuration = configuration
-        
         super.init(nibName: nil, bundle: nil)
     }
     
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        CalendarManager.initialize()
         self.configuration = Configuration()
-        
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
     required init?(coder: NSCoder) {
+        CalendarManager.initialize()
         self.configuration = Configuration()
-        
         super.init(coder: coder)
     }
     

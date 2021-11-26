@@ -9,9 +9,13 @@ import Combine
 
 final class CalendarManager {
     
-    static let main = CalendarManager()
+    static var main = CalendarManager()
     
     static var calendar = Calendar.current
+    
+    static func initialize() {
+        main = CalendarManager()
+    }
     
     weak var calendarDataSource: CalendarUIDataSource?
     
@@ -25,6 +29,10 @@ final class CalendarManager {
     var calendarCellReusePool = ReusePool<CalendarCell>()
     
     var allowMultipleSelection = false
+}
+
+// MARK: User Selection Handler
+extension CalendarManager {
     
     func handleUserSelectDay(_ day: CalendarDay) {
         if allowMultipleSelection {

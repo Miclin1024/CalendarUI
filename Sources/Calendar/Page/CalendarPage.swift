@@ -38,7 +38,7 @@ extension CalendarPageController {
         init(_ calendarUI: CalendarUI, state: CalendarState) {
             self.calendarUI = calendarUI
             self.state = state
-            self.configuration = calendarUI.configuration.calendarConfiguration
+            configuration = calendarUI.configuration.calendarConfiguration
             super.init(nibName: nil, bundle: nil)
         }
         
@@ -66,6 +66,9 @@ extension CalendarPageController {
             let _ = CalendarManager.main.$selectedDays.sink { _ in
                 self.setNeedsUpdateViews()
             }
+            
+            // Perform an update for all newly created pages
+            updateViews()
         }
         
         override func viewDidLayoutSubviews() {
@@ -85,13 +88,17 @@ extension CalendarPageController.Page {
      */
     func updateViewsIfNeeded() {
         if needsUpdateViews {
-            let range = state.dateRange
-            let syncDays = CalendarManager.main.selectedDays
-                .filter { range.contains($0.date) }
-            syncCalendarSelection(withDays: syncDays)
-
-            calendarCollection.allowsMultipleSelection = configuration.allowMultipleSelection
+            updateViews()
         }
+    }
+    
+    private func updateViews() {
+        let range = state.dateRange
+        let syncDays = CalendarManager.main.selectedDays
+            .filter { range.contains($0.date) }
+        syncCalendarSelection(withDays: syncDays)
+
+        calendarCollection.allowsMultipleSelection = configuration.allowMultipleSelection
     }
     
     private func setNeedsUpdateViews() {

@@ -12,6 +12,7 @@ open class CalendarCell: UICollectionViewCell {
     var configuration = Configuration.CalendarConfiguration()
     
     open override func prepareForReuse() {
-        CalendarManager.main.calendarCellReusePool.enqueue(views: [self])
+        let pool = CalendarManager.main.fetchReusePool(for: type(of: self))
+        pool.enqueue(views: [self])
     }
 }

@@ -26,7 +26,7 @@ final class CalendarManager {
     
     @Published private(set) var selectedDays = Set<CalendarDay>()
     
-    var calendarCellReusePool = ReusePool<CalendarCell>()
+    private var calendarCellReusePools = [ObjectIdentifier: ReusePool<CalendarCell>]()
     
     var allowMultipleSelection = false
 }
@@ -45,5 +45,23 @@ extension CalendarManager {
     
     func handleUserDeselectDay(_ day: CalendarDay) -> Bool {
         return selectedDays.remove(day) != nil
+    }
+}
+
+// MARK: Reuse Pool
+extension CalendarManager {
+    
+    func fetchReusePool<Cell: CalendarCell>(for cellType: Cell.Type) -> ReusePool<Cell> {
+        let identifier = ObjectIdentifier(cellType)
+        guard let pool = calendarCellReusePools[identifier] else {
+            calendarCellReusePools[identifier] = ReusePool<CalendarCell>()
+            return ReusePool<Cell>()
+        }
+        
+        guard let poolCasted = pool as? ReusePool<Cell> else {
+            fatalError("Unexpected type found in cell reuse pool")
+        }
+        
+        return poolCasted
     }
 }

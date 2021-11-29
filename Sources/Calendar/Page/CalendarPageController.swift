@@ -20,7 +20,7 @@ final class CalendarPageController: UIPageViewController {
     
     init(_ calendarUI: CalendarUI) {
         self.calendarUI = calendarUI
-        self.configuration = calendarUI.configuration.calendarConfiguration
+        configuration = calendarUI.configuration.calendarConfiguration
         super.init(transitionStyle: .scroll,
                    navigationOrientation: .horizontal, options: nil)
         CalendarManager.main.allowMultipleSelection =

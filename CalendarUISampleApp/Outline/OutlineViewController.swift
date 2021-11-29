@@ -14,6 +14,14 @@ class OutlineViewController: UIViewController {
         case main
     }
     
+    private let data: [OutlineItem] = [
+        OutlineItem(title: "Monthly Calendars", subitems: [
+            OutlineItem(title: "with Multiple Selection",
+                        viewController: MonthViewController.self,
+                        subitems: [])
+        ])
+    ]
+    
     private var outlineCollection: UICollectionView!
     
     private var dataSource: UICollectionViewDiffableDataSource<
@@ -22,7 +30,7 @@ class OutlineViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = "CalendarUI Example"
+        navigationItem.title = "CalendarUI"
         
         let layout = createLayout()
         outlineCollection = UICollectionView(
@@ -97,14 +105,25 @@ private extension OutlineViewController {
         
         var snapshot = NSDiffableDataSourceSectionSnapshot<OutlineItem>()
 
-        let parent = OutlineItem(title: "Parent",
-                                 subitems: [.init(title: "Child")])
-        snapshot.append([parent], to: nil)
-        snapshot.append(parent.subitems, to: parent)
+        for root in data {
+            var frontier = [root]
+            snapshot.append([root], to: nil)
+            while !frontier.isEmpty {
+                let item = frontier.popLast()!
+                if !item.subitems.isEmpty {
+                    snapshot.append(item.subitems, to: item)
+                    frontier.append(contentsOf: item.subitems.reversed())
+                }
+            }
+        }
+        
+//        snapshot.append([parent], to: nil)
+//        snapshot.append(parent.subitems, to: parent)
         return snapshot
     }
 }
 
+// MARK: Delegate
 extension OutlineViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

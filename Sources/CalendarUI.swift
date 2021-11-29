@@ -107,11 +107,9 @@ public extension CalendarUI {
 
 // MARK: - CalendarCell Dequeue
 public extension CalendarUI {
-    func dequeueConfiguredReusableCell<Cell>(using registration: CellRegistration<Cell>, day: CalendarDay) -> Cell where Cell: CalendarCell {
-        let pool = CalendarManager.main.calendarCellReusePool
-        guard let cell = pool.dequeue() as? Cell else {
-            fatalError("Multi-cell calendar currently not supported")
-        }
+    func dequeueConfiguredReusableCell<Cell: CalendarCell>(using registration: CellRegistration<Cell>, day: CalendarDay) -> Cell {
+        let pool = CalendarManager.main.fetchReusePool(for: Cell.self)
+        let cell = pool.dequeue()
         registration.handler(cell, day)
         return cell
     }

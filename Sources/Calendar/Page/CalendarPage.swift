@@ -22,7 +22,7 @@ extension CalendarPageController {
         var configuration: Configuration.CalendarConfiguration {
             didSet {
                 if oldValue != configuration {
-                    setNeedsUpdateViews()
+                    setNeedsUpdatePage()
                 }
             }
         }
@@ -33,7 +33,7 @@ extension CalendarPageController {
             Section, CalendarDay
         >!
         
-        private var needsUpdateViews = false
+        private var needsUpdatePage = false
         
         init(_ calendarUI: CalendarUI, state: CalendarState) {
             self.calendarUI = calendarUI
@@ -64,11 +64,11 @@ extension CalendarPageController {
             view.addSubview(calendarCollection)
             
             let _ = CalendarManager.main.$selectedDays.sink { _ in
-                self.setNeedsUpdateViews()
+                self.setNeedsUpdatePage()
             }
             
             // Perform an update for all newly created pages
-            updateViews()
+            updatePage()
         }
         
         override func viewDidLayoutSubviews() {
@@ -78,21 +78,42 @@ extension CalendarPageController {
     }
 }
 
-// MARK: Views Update
+// MARK: Calendar Page Update
 extension CalendarPageController.Page {
     
     /**
-     Update the calendar view immediately.
+     Perform an in-place transition of the calendar page to a new state.
+     */
+    func transition(to state: CalendarState, animated: Bool, completion: (()->Void)? = nil) {
+        guard CalendarState.sameMonthWithDifferentLayout(state, self.state) else {
+            CalendarUILog.send(
+                "Unexpected state for in-place page transition",
+                level: .error)
+            return
+        }
+        
+        let snapshot = generateSnapshot(for: state)
+        dataSource.apply(
+            snapshot, animatingDifferences: animated,
+            completion: {
+                self.state = state
+                completion?()
+            }
+        )
+    }
+    
+    /**
+     Update the calendar page immediately.
      
      This includes performing any layout updates, day selections sync, etc.
      */
-    func updateViewsIfNeeded() {
-        if needsUpdateViews {
-            updateViews()
+    func updatePageIfNeeded() {
+        if needsUpdatePage {
+            updatePage()
         }
     }
     
-    private func updateViews() {
+    private func updatePage() {
         let range = state.dateRange
         let syncDays = CalendarManager.main.selectedDays
             .filter { range.contains($0.date) }
@@ -101,8 +122,8 @@ extension CalendarPageController.Page {
         calendarCollection.allowsMultipleSelection = configuration.allowMultipleSelection
     }
     
-    private func setNeedsUpdateViews() {
-        needsUpdateViews = true
+    private func setNeedsUpdatePage() {
+        needsUpdatePage = true
     }
     
     /**
@@ -149,14 +170,14 @@ extension CalendarPageController.Page {
         
         for day in days {
             guard range.contains(day.date) else {
-                CalendarLog.send(
+                CalendarUILog.send(
                     "Can't select date on a calendar page that doesn't contain it",
                     level: .warning)
                 return
             }
             
             guard let indexPath = dataSource.indexPath(for: day) else {
-                CalendarLog.send(
+                CalendarUILog.send(
                     "Can't find index path for calendar day",
                     level: .error)
                 return
@@ -178,14 +199,14 @@ extension CalendarPageController.Page {
         
         for day in days {
             guard range.contains(day.date) else {
-                CalendarLog.send(
+                CalendarUILog.send(
                     "Can't deselect date on a calendar page that doesn't contain it",
                     level: .warning)
                 return
             }
             
             guard let indexPath = dataSource.indexPath(for: day) else {
-                CalendarLog.send(
+                CalendarUILog.send(
                     "Can't find index path for calendar day",
                     level: .error)
                 return
@@ -246,12 +267,12 @@ private extension CalendarPageController.Page {
             return cell
         }
         
-        let snapshot = generateSnapshot()
+        let snapshot = generateSnapshot(for: self.state)
         dataSource.apply(snapshot, animatingDifferences: false,
                          completion: nil)
     }
     
-    func generateSnapshot() -> NSDiffableDataSourceSnapshot<Section, CalendarDay> {
+    func generateSnapshot(for state: CalendarState) -> NSDiffableDataSourceSnapshot<Section, CalendarDay> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, CalendarDay>()
         snapshot.appendSections([.main])
         let days = CalendarDayProvider.days(for: state)
@@ -268,7 +289,14 @@ extension CalendarPageController.Page: UICollectionViewDelegate {
             return false
         }
         
-        return state.dateRange.contains(day.date)
+        if !state.dateRange.contains(day.date) {
+            let targetState = day.date > state.firstDateInMonthOrWeek ?
+            state.next : state.prev
+            calendarUI.transition(to: targetState, animated: true)
+            return false
+        }
+        
+        return true
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -276,7 +304,7 @@ extension CalendarPageController.Page: UICollectionViewDelegate {
             return
         }
         CalendarManager.main.handleUserSelectDay(day)
-        CalendarLog.send(
+        CalendarUILog.send(
             "Selected \(day)", level: .info)
     }
     
@@ -286,11 +314,11 @@ extension CalendarPageController.Page: UICollectionViewDelegate {
         }
         // Log a warning message if no day was removed from manager
         if !CalendarManager.main.handleUserDeselectDay(day) {
-            CalendarLog.send(
+            CalendarUILog.send(
                 "Calendar day not found in state management",
                 level: .warning)
         } else {
-            CalendarLog.send(
+            CalendarUILog.send(
                 "Deselected \(day)", level: .info)
         }
     }

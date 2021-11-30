@@ -1,5 +1,5 @@
 //
-//  CalendarLog.swift
+//  CalendarUILog.swift
 //  CalendarUI
 //
 //  Created by Michael Lin on 11/17/21.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CalendarLog {
+class CalendarUILog {
     
     enum Level: Int, Comparable {
         
@@ -26,7 +26,7 @@ class CalendarLog {
             }
         }
         
-        static func < (lhs: CalendarLog.Level, rhs: CalendarLog.Level) -> Bool {
+        static func < (lhs: CalendarUILog.Level, rhs: CalendarUILog.Level) -> Bool {
             return lhs.rawValue < rhs.rawValue
         }
     }

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1A0591612745E24E00AED4E5 /* CalendarLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0591602745E24E00AED4E5 /* CalendarLog.swift */; };
+		1A0591612745E24E00AED4E5 /* CalendarUILog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0591602745E24E00AED4E5 /* CalendarUILog.swift */; };
 		1A38370127506EF8007832CF /* OutlineItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A38370027506EF8007832CF /* OutlineItem.swift */; };
 		1A38370527509244007832CF /* MonthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A38370427509244007832CF /* MonthViewController.swift */; };
 		1A5487C42754C3DC006B3295 /* WeekViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5487C32754C3DC006B3295 /* WeekViewController.swift */; };
@@ -80,7 +80,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1A0591602745E24E00AED4E5 /* CalendarLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarLog.swift; sourceTree = "<group>"; };
+		1A0591602745E24E00AED4E5 /* CalendarUILog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUILog.swift; sourceTree = "<group>"; };
 		1A38370027506EF8007832CF /* OutlineItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineItem.swift; sourceTree = "<group>"; };
 		1A38370427509244007832CF /* MonthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthViewController.swift; sourceTree = "<group>"; };
 		1A5487C32754C3DC006B3295 /* WeekViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekViewController.swift; sourceTree = "<group>"; };
@@ -192,7 +192,7 @@
 			children = (
 				1A9DCBCE2741BAF800A1DC84 /* CalendarDayProvider.swift */,
 				1A8075E7274353CD00BCB814 /* ReusePool.swift */,
-				1A0591602745E24E00AED4E5 /* CalendarLog.swift */,
+				1A0591602745E24E00AED4E5 /* CalendarUILog.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -479,7 +479,7 @@
 				1A9DCBCF2741BAF800A1DC84 /* CalendarDayProvider.swift in Sources */,
 				1A8075E527434DD900BCB814 /* CalendarCollectionView.swift in Sources */,
 				1A9DCBE72742437900A1DC84 /* CalendarManager.swift in Sources */,
-				1A0591612745E24E00AED4E5 /* CalendarLog.swift in Sources */,
+				1A0591612745E24E00AED4E5 /* CalendarUILog.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

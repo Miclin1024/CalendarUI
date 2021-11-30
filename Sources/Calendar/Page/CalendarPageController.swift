@@ -18,6 +18,19 @@ final class CalendarPageController: UIPageViewController {
     
     private var stateSubscription: AnyCancellable!
     
+    private var currentPage: Page! {
+        let currentState = CalendarManager.main.state
+        guard let page = pagePool[currentState] else {
+            CalendarUILog.send(
+                "Unable to find current calendar page",
+                level: .error
+            )
+            return nil
+        }
+        
+        return page
+    }
+    
     init(_ calendarUI: CalendarUI) {
         self.calendarUI = calendarUI
         configuration = calendarUI.configuration.calendarConfiguration
@@ -76,16 +89,60 @@ extension CalendarPageController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
         for vc in pendingViewControllers
             .compactMap({$0 as? Page}) {
-            vc.updateViewsIfNeeded()
+            vc.updatePageIfNeeded()
         }
     }
 }
 
 // MARK: State Transition and Configuration Update
 extension CalendarPageController {
+    
     func updateConfiguration(_ configuration: Configuration.CalendarConfiguration) {
         self.configuration = configuration
         pagePool.values.forEach { $0.configuration = configuration }
+    }
+    
+    func transition(to state: CalendarState, animated: Bool, completion: (()->Void)? = nil) {
+        let currentState = CalendarManager.main.state
+        guard currentState != state else { return }
+        
+        if CalendarState.sameMonthWithDifferentLayout(currentState, state) {
+            // Perform an in-place transition if the target state is in the same month
+            // and only differs by its layout.
+            guard let page = pagePool[currentState] else {
+                CalendarUILog.send(
+                    "",
+                    level: .error
+                )
+                return
+            }
+            
+            page.transition(
+                to: state,
+                animated: animated,
+                completion: {
+                    // Update reuse pool about the mutation
+                    self.pagePool.removeValue(forKey: currentState)
+                    self.pagePool[state] = page
+                    
+                    CalendarManager.main.state = state
+                    completion?()
+                }
+            )
+        } else {
+            // Otherwise, bring up a new page for the target calendar state.
+            let page = calendarPage(for: state)
+            let direction: UIPageViewController.NavigationDirection = currentState
+                .firstDateInMonthOrWeek < state.firstDateInMonthOrWeek ?
+                .forward : .reverse
+            setViewControllers(
+                [page], direction: direction,
+                animated: animated, completion: { _ in
+                    CalendarManager.main.state = state
+                    completion?()
+                }
+            )
+        }
     }
 }
 

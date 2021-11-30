@@ -14,6 +14,20 @@ import Foundation
  */
 public struct CalendarState: Hashable {
     
+    /**
+     Return whether the two states have different layout but are in in the same month.
+     
+     This function is used to determine whether a state update should happen in place on the page.
+     */
+    static func sameMonthWithDifferentLayout(_ state1: CalendarState, _ state2: CalendarState) -> Bool {
+        guard state1.layout != state2.layout else { return false }
+        
+        let calendar = CalendarManager.calendar
+        return calendar
+            .startOfMonth(for: state1.firstDateInMonthOrWeek) == calendar
+            .startOfMonth(for: state2.firstDateInMonthOrWeek)
+    }
+    
     public enum Layout: Int, Hashable {
         case month = 0
         case week = 1

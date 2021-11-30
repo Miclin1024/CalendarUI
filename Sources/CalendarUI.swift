@@ -68,6 +68,7 @@ public final class CalendarUI: UIViewController {
 
 // MARK: - View Configuration
 private extension CalendarUI {
+    
     func configureViews() {
         
         let stackView = UIStackView()
@@ -90,8 +91,9 @@ private extension CalendarUI {
     }
 }
 
-// MARK: - CalendarCell Registration
+// MARK: - Calendar Cell Management
 public extension CalendarUI {
+    
     struct CellRegistration<Cell> where Cell: CalendarCell {
         
         public typealias Handler = (_ cell: Cell, _ day: CalendarDay) -> Void
@@ -104,14 +106,19 @@ public extension CalendarUI {
             self.handler = handler
         }
     }
-}
-
-// MARK: - CalendarCell Dequeue
-public extension CalendarUI {
+    
     func dequeueConfiguredReusableCell<Cell: CalendarCell>(using registration: CellRegistration<Cell>, day: CalendarDay) -> Cell {
         let pool = CalendarManager.main.fetchReusePool(for: Cell.self)
         let cell = pool.dequeue()
         registration.handler(cell, day)
         return cell
+    }
+}
+
+// MARK: - Calendar Transition
+public extension CalendarUI {
+    
+    func transition(to state: CalendarState, animated: Bool) {
+        calendarPageController.transition(to: state, animated: animated, completion: nil)
     }
 }

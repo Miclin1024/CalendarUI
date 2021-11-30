@@ -48,6 +48,7 @@ extension CalendarPageController {
         
         override func loadView() {
             super.loadView()
+            
         }
         
         override func viewDidLoad() {
@@ -62,6 +63,7 @@ extension CalendarPageController {
             calendarCollection.delegate = self
             
             view.addSubview(calendarCollection)
+            calendarCollection.constraints(to: view)
             
             let _ = CalendarManager.main.$selectedDays.sink { _ in
                 self.setNeedsUpdatePage()
@@ -73,7 +75,9 @@ extension CalendarPageController {
         
         override func viewDidLayoutSubviews() {
             super.viewDidLayoutSubviews()
-            calendarCollection.frame = view.bounds
+            calendarCollection.collectionViewLayout.invalidateLayout()
+            calendarCollection.setCollectionViewLayout(
+                createLayout(), animated: false)
         }
     }
 }
@@ -219,24 +223,28 @@ extension CalendarPageController.Page {
 }
 
 // MARK: Collection View Layout
-private extension CalendarPageController.Page {
+extension CalendarPageController.Page {
     
-    func createLayout() -> UICollectionViewCompositionalLayout {
-        return UICollectionViewCompositionalLayout { index, environment in
-            let itemSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1/7),
-                heightDimension: .fractionalWidth(1/7/self.configuration.aspectRatio))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            
-            let groupSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalWidth(1/7/self.configuration.aspectRatio))
-            let group = NSCollectionLayoutGroup.horizontal(
-                layoutSize: groupSize,
-                subitem: item, count: 7)
-            
-            let section = NSCollectionLayoutSection(group: group)
-            return section
+    private func createLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 0
+        
+        let width = view.bounds.width / 7
+        let height = view.bounds.height / CGFloat(numberOfRows(in: state))
+        layout.itemSize = CGSize(width: width, height: height)
+        
+        return layout
+    }
+    
+    private func numberOfRows(in state: CalendarState) -> Int {
+        if state.layout == .week {
+            return 1
+        } else {
+            let calendar = CalendarManager.calendar
+            let range = calendar.range(of: .weekOfMonth, in: .month,
+                           for: state.firstDateInMonthOrWeek)!
+            return range.count
         }
     }
 }

@@ -11,6 +11,7 @@
 		1A38370127506EF8007832CF /* OutlineItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A38370027506EF8007832CF /* OutlineItem.swift */; };
 		1A38370527509244007832CF /* MonthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A38370427509244007832CF /* MonthViewController.swift */; };
 		1A5487C42754C3DC006B3295 /* WeekViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5487C32754C3DC006B3295 /* WeekViewController.swift */; };
+		1A5487C72755D745006B3295 /* UIView+Constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5487C52755D5B6006B3295 /* UIView+Constraints.swift */; };
 		1A8075D927430EE300BCB814 /* CalendarPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8075D827430EE300BCB814 /* CalendarPageController.swift */; };
 		1A8075DB274312B200BCB814 /* TimelinePageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8075DA274312B200BCB814 /* TimelinePageController.swift */; };
 		1A8075DD27432EE100BCB814 /* EventDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8075DC27432EE100BCB814 /* EventDescriptor.swift */; };
@@ -84,6 +85,7 @@
 		1A38370027506EF8007832CF /* OutlineItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineItem.swift; sourceTree = "<group>"; };
 		1A38370427509244007832CF /* MonthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthViewController.swift; sourceTree = "<group>"; };
 		1A5487C32754C3DC006B3295 /* WeekViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekViewController.swift; sourceTree = "<group>"; };
+		1A5487C52755D5B6006B3295 /* UIView+Constraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Constraints.swift"; sourceTree = "<group>"; };
 		1A8075D827430EE300BCB814 /* CalendarPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPageController.swift; sourceTree = "<group>"; };
 		1A8075DA274312B200BCB814 /* TimelinePageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelinePageController.swift; sourceTree = "<group>"; };
 		1A8075DC27432EE100BCB814 /* EventDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDescriptor.swift; sourceTree = "<group>"; };
@@ -288,6 +290,7 @@
 			children = (
 				1A9DCBD82741CFBF00A1DC84 /* Calendar+Utilities.swift */,
 				1A9DCBDA2741F18800A1DC84 /* Date+Strideable.swift */,
+				1A5487C52755D5B6006B3295 /* UIView+Constraints.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -472,6 +475,7 @@
 				1A9DCBCB2741B80700A1DC84 /* CalendarDay.swift in Sources */,
 				1A9DCBE3274238DD00A1DC84 /* CalendarUIConfiguration.swift in Sources */,
 				1A9DCBE12742370B00A1DC84 /* HeaderView.swift in Sources */,
+				1A5487C72755D745006B3295 /* UIView+Constraints.swift in Sources */,
 				1A9DCBDB2741F18800A1DC84 /* Date+Strideable.swift in Sources */,
 				1A9DCBD12741BB5500A1DC84 /* CalendarState.swift in Sources */,
 				1A8075D927430EE300BCB814 /* CalendarPageController.swift in Sources */,

@@ -24,9 +24,9 @@ public extension CalendarUI {
         
         public var headerBottomSpacing: CGFloat = 10
         
-        public var backgroundColor = UIColor.clear
+        public var backgroundColor = UIColor.systemBackground
         
-        public var contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        public var margin = NSDirectionalEdgeInsets(top: 15, leading: 10, bottom: 15, trailing: 10)
         
         public init() {}
     }

@@ -29,9 +29,7 @@ public extension CalendarUI.Configuration {
         
         public var font = UIFont.systemFont(ofSize: 14, weight: .semibold)
         
-        public var interCellSpacing = CGFloat(5.0)
-        
-        public var aspectRatio = CGFloat(1.0)
+        public var preferredHeightForCell = CGFloat(60)
         
         public init() {}
     }

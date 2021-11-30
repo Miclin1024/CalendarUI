@@ -33,7 +33,7 @@ public final class CalendarUI: UIViewController {
     
     var calendarPageController: CalendarPageController!
     
-    let configuration: Configuration
+    var configuration: Configuration
     
     public init(initialState state: CalendarState? = nil,
                 configuration: Configuration = .init()) {
@@ -71,15 +71,18 @@ private extension CalendarUI {
     
     func configureViews() {
         
+        view.backgroundColor = .systemBackground
+        
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = configuration.headerBottomSpacing
         stackView.distribution = .fill
         stackView.alignment = .fill
-        
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
-        stackView.frame = view.bounds
-            .inset(by: configuration.contentInset)
+        
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.directionalLayoutMargins = configuration.margin
         
         stackView.addArrangedSubview(headerView)
         
@@ -87,7 +90,16 @@ private extension CalendarUI {
         stackView.addArrangedSubview(calendarPageController.view)
         calendarPageController.didMove(toParent: self)
         
-//        stackView.addArrangedSubview(timelineView)
+        let bottomConstraint = stackView.bottomAnchor
+            .constraint(equalTo: view.bottomAnchor)
+        bottomConstraint.priority = .defaultLow - 1
+        
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stackView.topAnchor.constraint(equalTo: view.topAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            stackView.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
+        ])
     }
 }
 

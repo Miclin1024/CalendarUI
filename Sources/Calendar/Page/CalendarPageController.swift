@@ -18,6 +18,8 @@ final class CalendarPageController: UIPageViewController {
     
     private var stateSubscription: AnyCancellable!
     
+    private var calendarHeightConstraint: NSLayoutConstraint!
+    
     private var currentPage: Page! {
         let currentState = CalendarManager.main.state
         guard let page = pagePool[currentState] else {
@@ -46,12 +48,20 @@ final class CalendarPageController: UIPageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.translatesAutoresizingMaskIntoConstraints = false
         dataSource = self
         delegate = self
+        let initialState = CalendarManager.main.state
         
-        let initialVC = calendarPage(for: CalendarManager.main.state)
+        let initialVC = calendarPage(for: initialState)
         setViewControllers([initialVC], direction: .forward,
                            animated: false, completion: nil)
+        
+        let height = calculateHeight(state: initialState)
+        calendarHeightConstraint = view.heightAnchor.constraint(
+            equalToConstant: height
+        )
+        calendarHeightConstraint.isActive = true
         
 //        stateSubscription = CalendarManager.main.$state
 //            .dropFirst()
@@ -143,6 +153,18 @@ extension CalendarPageController {
                 }
             )
         }
+    }
+    
+    private func resizeHeight() {
+        let height = calculateHeight(state: CalendarManager.main.state)
+        calendarHeightConstraint.constant = height
+        view.layoutIfNeeded()
+    }
+    
+    private func calculateHeight(state: CalendarState) -> CGFloat {
+        return configuration.preferredHeightForCell * (
+            state.layout == .month ? 5 : 1
+        )
     }
 }
 

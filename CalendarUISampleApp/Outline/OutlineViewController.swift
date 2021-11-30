@@ -18,8 +18,13 @@ class OutlineViewController: UIViewController {
         OutlineItem(title: "Monthly Calendars", subitems: [
             OutlineItem(title: "with Multiple Selection",
                         viewController: MonthViewController.self,
-                        subitems: [])
-        ])
+                        subitems: []),
+        ]),
+        OutlineItem(title: "Weekly Calendars", subitems: [
+            OutlineItem(title: "with Multiple Selection",
+                        viewController: WeekViewController.self,
+                        subitems: []),
+        ]),
     ]
     
     private var outlineCollection: UICollectionView!

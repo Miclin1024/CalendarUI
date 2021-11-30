@@ -13,14 +13,17 @@ final class CalendarManager {
     
     static var calendar = Calendar.current
     
-    static func initialize() {
-        main = CalendarManager()
+    static func initialize(withState state: CalendarState? = nil) {
+        if let state = state {
+            main = CalendarManager(state: state)
+        } else {
+            main = CalendarManager()
+        }
     }
     
     weak var calendarDataSource: CalendarUIDataSource?
     
-    @Published var state = CalendarState(
-        withLayout: .month, date: .now)
+    @Published var state: CalendarState
     
     @Published var isTimelineEnabled: Bool = false
     
@@ -29,6 +32,11 @@ final class CalendarManager {
     private var calendarCellReusePools = [ObjectIdentifier: ReusePool<CalendarCell>]()
     
     var allowMultipleSelection = false
+    
+    init(state: CalendarState = CalendarState(
+        withLayout: .month, date: .now)) {
+        self.state = state
+    }
 }
 
 // MARK: User Selection Handler

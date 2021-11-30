@@ -35,8 +35,9 @@ public final class CalendarUI: UIViewController {
     
     let configuration: Configuration
     
-    public init(configuration: Configuration = .init()) {
-        CalendarManager.initialize()
+    public init(initialState state: CalendarState? = nil,
+                configuration: Configuration = .init()) {
+        CalendarManager.initialize(withState: state)
         self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
     }

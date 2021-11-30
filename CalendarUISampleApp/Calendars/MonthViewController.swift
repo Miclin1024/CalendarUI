@@ -27,6 +27,8 @@ class MonthViewController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-        calendar.view.frame = view.bounds.inset(by: view.safeAreaInsets)
+        calendar.view.frame = view.bounds
+            .inset(by: view.safeAreaInsets)
+            .inset(by: UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20))
     }
 }

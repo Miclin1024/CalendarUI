@@ -71,7 +71,7 @@ private extension CalendarUI {
     
     func configureViews() {
         
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .clear
         
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -79,10 +79,12 @@ private extension CalendarUI {
         stackView.distribution = .fill
         stackView.alignment = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.backgroundColor = .systemBackground
         view.addSubview(stackView)
         
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.directionalLayoutMargins = configuration.margin
+        stackView.layer.cornerRadius = 13
         
         stackView.addArrangedSubview(headerView)
         

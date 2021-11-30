@@ -35,7 +35,7 @@ class DefaultCalendarCell: CalendarCell {
         numberLabel.center = contentView.center
         
         let selectedBackgroundSize = min(
-            bounds.width, bounds.height) - 15
+            bounds.width, bounds.height) - 8
         backgroundView?.frame = CGRect(
             origin: .zero,
             size: CGSize(width: selectedBackgroundSize,

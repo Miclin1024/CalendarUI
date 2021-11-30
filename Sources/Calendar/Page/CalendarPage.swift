@@ -48,7 +48,6 @@ extension CalendarPageController {
         
         override func loadView() {
             super.loadView()
-            
         }
         
         override func viewDidLoad() {
@@ -57,7 +56,7 @@ extension CalendarPageController {
             view.backgroundColor = .clear
             
             calendarCollection = CalendarCollectionView(
-                frame: view.bounds,
+                frame: .zero,
                 collectionViewLayout: createLayout())
             configureDataSource()
             calendarCollection.delegate = self
@@ -230,7 +229,9 @@ extension CalendarPageController.Page {
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 0
         
-        let width = view.bounds.width / 7
+        // Floor to avoid floating-point error that would cause
+        // row to overflow
+        let width = floor(view.bounds.width / CGFloat(7))
         let height = view.bounds.height / CGFloat(numberOfRows(in: state))
         layout.itemSize = CGSize(width: width, height: height)
         

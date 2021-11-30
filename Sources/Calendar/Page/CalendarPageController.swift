@@ -14,6 +14,11 @@ final class CalendarPageController: UIPageViewController {
     
     unowned var calendarUI: CalendarUI
     
+    /**
+     Reuse pool for calendar page.
+     
+     Page should be accessed via the `calendarPage(for:)` factory method.
+     */
     private var pagePool = [CalendarState: Page]()
     
     private var stateSubscription: AnyCancellable!

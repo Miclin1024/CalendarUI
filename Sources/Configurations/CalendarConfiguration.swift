@@ -29,7 +29,7 @@ public extension CalendarUI.Configuration {
         
         public var font = UIFont.systemFont(ofSize: 14, weight: .semibold)
         
-        public var preferredHeightForCell = CGFloat(60)
+        public var preferredHeightForCell = CGFloat(50)
         
         public init() {}
     }

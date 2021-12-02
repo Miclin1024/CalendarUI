@@ -9,9 +9,11 @@ import UIKit
 
 extension UIView {
     
-    func constraints(to view: UIView, margin: NSDirectionalEdgeInsets = .zero) {
+    @discardableResult
+    func constraints(to view: UIView, margin: NSDirectionalEdgeInsets = .zero) -> (leading: NSLayoutConstraint, top: NSLayoutConstraint, trailing: NSLayoutConstraint, bottom: NSLayoutConstraint) {
+        
         translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
+        let constraints = [
             leadingAnchor.constraint(
                 equalTo: view.leadingAnchor,
                 constant: margin.leading
@@ -28,6 +30,11 @@ extension UIView {
                 equalTo: view.bottomAnchor,
                 constant: -margin.bottom
             )
-        ])
+        ]
+        NSLayoutConstraint.activate(constraints)
+        return (
+            constraints[0], constraints[1],
+            constraints[2], constraints[3]
+        )
     }
 }

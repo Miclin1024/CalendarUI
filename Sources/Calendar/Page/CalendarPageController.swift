@@ -40,7 +40,8 @@ final class CalendarPageController: UIPageViewController {
     
     init(_ calendarUI: CalendarUI) {
         self.calendarUI = calendarUI
-        configuration = calendarUI.configuration.calendarConfiguration
+        configuration = calendarUI
+            .configuration.calendarConfiguration
         super.init(transitionStyle: .scroll,
                    navigationOrientation: .horizontal, options: nil)
         CalendarManager.main.allowMultipleSelection =
@@ -121,7 +122,7 @@ extension CalendarPageController {
         let currentState = CalendarManager.main.state
         guard currentState != state else { return }
         
-        if CalendarState.sameMonthWithDifferentLayout(currentState, state) {
+        if CalendarState.shouldUseInPlaceTransition(currentState, state) {
             // Perform an in-place transition if the target state is in the same month
             // and only differs by its layout.
             guard let page = pagePool[currentState] else {
@@ -132,18 +133,35 @@ extension CalendarPageController {
                 return
             }
             
-            page.transition(
-                to: state,
-                animated: animated,
-                completion: {
-                    // Update reuse pool about the mutation
-                    self.pagePool.removeValue(forKey: currentState)
-                    self.pagePool[state] = page
-                    
-                    CalendarManager.main.state = state
-                    completion?()
-                }
-            )
+            func inPlaceUpdateCompletion() {
+                // Update reuse pool about the mutation
+                self.pagePool.removeValue(forKey: currentState)
+                self.pagePool[state] = page
+                CalendarManager.main.state = state
+                completion?()
+            }
+            
+            if currentState.layout == .week {
+                page.transition(
+                    to: state,
+                    animated: false,
+                    completion: {
+                        UIView.animate(withDuration: 0.4, animations: {
+                            self.resizeHeight(state: state)
+                        }, completion: nil)
+                        inPlaceUpdateCompletion()
+                    }
+                )
+            } else {
+                UIView.animate(withDuration: 0.4, animations: {
+                    self.resizeHeight(state: state)
+                }, completion: { _ in
+                    page.transition(to: state, animated: false)
+                    inPlaceUpdateCompletion()
+                })
+            }
+
+            
         } else {
             // Otherwise, bring up a new page for the target calendar state.
             let page = calendarPage(for: state)
@@ -154,16 +172,20 @@ extension CalendarPageController {
                 [page], direction: direction,
                 animated: animated, completion: { _ in
                     CalendarManager.main.state = state
+                    self.resizeHeight(state: state)
                     completion?()
                 }
             )
         }
     }
     
-    private func resizeHeight() {
-        let height = calculateHeight(state: CalendarManager.main.state)
+    /**
+     Resize the calendar using the would-be calendar state.
+     */
+    private func resizeHeight(state: CalendarState) {
+        let height = calculateHeight(state: state)
         calendarHeightConstraint.constant = height
-        view.layoutIfNeeded()
+        calendarUI.view.layoutIfNeeded()
     }
     
     private func calculateHeight(state: CalendarState) -> CGFloat {

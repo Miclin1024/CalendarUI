@@ -15,17 +15,15 @@ import Foundation
 public struct CalendarState: Hashable {
     
     /**
-     Return whether the two states have different layout but are in in the same month.
+     Return whether the transition between the two states should happen in place on the same page.
      
-     This function is used to determine whether a state update should happen in place on the page.
+     Return true if the two state use different layouts, and the days within the week is a subset of
+     the days displayed in that month.
      */
-    static func sameMonthWithDifferentLayout(_ state1: CalendarState, _ state2: CalendarState) -> Bool {
+    static func shouldUseInPlaceTransition(_ state1: CalendarState, _ state2: CalendarState) -> Bool {
         guard state1.layout != state2.layout else { return false }
         
-        let calendar = CalendarManager.calendar
-        return calendar
-            .startOfMonth(for: state1.firstDateInMonthOrWeek) == calendar
-            .startOfMonth(for: state2.firstDateInMonthOrWeek)
+        return state1.dateRange.overlaps(state2.dateRange)
     }
     
     public enum Layout: Int, Hashable {

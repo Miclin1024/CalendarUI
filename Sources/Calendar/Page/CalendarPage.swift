@@ -62,7 +62,9 @@ extension CalendarPageController {
             calendarCollection.delegate = self
             
             view.addSubview(calendarCollection)
-            calendarCollection.constraints(to: view)
+            let constraints = calendarCollection
+                .constraints(to: view)
+            constraints.bottom.priority = .defaultHigh - 1
             
             let _ = CalendarManager.main.$selectedDays.sink { _ in
                 self.setNeedsUpdatePage()
@@ -88,7 +90,7 @@ extension CalendarPageController.Page {
      Perform an in-place transition of the calendar page to a new state.
      */
     func transition(to state: CalendarState, animated: Bool, completion: (()->Void)? = nil) {
-        guard CalendarState.sameMonthWithDifferentLayout(state, self.state) else {
+        guard CalendarState.shouldUseInPlaceTransition(state, self.state) else {
             CalendarUILog.send(
                 "Unexpected state for in-place page transition",
                 level: .error)
@@ -100,6 +102,8 @@ extension CalendarPageController.Page {
             snapshot, animatingDifferences: animated,
             completion: {
                 self.state = state
+                self.calendarCollection
+                    .invalidateIntrinsicContentSize()
                 completion?()
             }
         )
@@ -257,8 +261,10 @@ private extension CalendarPageController.Page {
         let registration = UICollectionView.CellRegistration<
             DefaultCalendarCell, CalendarDay
         >() { [unowned self] cell, indexPath, day in
-            cell.configuration = self.configuration
-            cell.configure(using: day, state: self.state)
+            UIView.performWithoutAnimation {
+                cell.configuration = self.configuration
+                cell.configure(using: day, state: self.state)
+            }
         }
         
         dataSource = UICollectionViewDiffableDataSource<

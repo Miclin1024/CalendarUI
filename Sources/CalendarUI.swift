@@ -92,15 +92,21 @@ private extension CalendarUI {
         stackView.addArrangedSubview(calendarPageController.view)
         calendarPageController.didMove(toParent: self)
         
-        let bottomConstraint = stackView.bottomAnchor
+        let preferredHeight = stackView.bottomAnchor
             .constraint(equalTo: view.bottomAnchor)
-        bottomConstraint.priority = .defaultLow - 1
+        preferredHeight.priority = .defaultLow - 1
+        
+        let maxHeight = stackView.bottomAnchor
+            .constraint(lessThanOrEqualTo: view.bottomAnchor)
         
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stackView.leadingAnchor.constraint(
+                equalTo: view.leadingAnchor),
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            stackView.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
+            stackView.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor),
+            preferredHeight,
+            maxHeight,
         ])
     }
 }

@@ -25,6 +25,12 @@ class OutlineViewController: UIViewController {
                         viewController: WeekViewController.self,
                         subitems: []),
         ]),
+        OutlineItem(title: "Transitions", subitems: [
+            OutlineItem(
+                title: "Week & Month",
+                viewController:TransitionViewController.self,
+                subitems: [])
+        ])
     ]
     
     private var outlineCollection: UICollectionView!

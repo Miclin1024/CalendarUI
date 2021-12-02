@@ -45,6 +45,7 @@
 		1A9DCBE3274238DD00A1DC84 /* CalendarUIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9DCBE2274238DD00A1DC84 /* CalendarUIConfiguration.swift */; };
 		1A9DCBE527423AAB00A1DC84 /* HeaderConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9DCBE427423AAB00A1DC84 /* HeaderConfiguration.swift */; };
 		1A9DCBE72742437900A1DC84 /* CalendarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9DCBE62742437900A1DC84 /* CalendarManager.swift */; };
+		1AA61B552756E9220039ED4C /* TransitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA61B542756E9220039ED4C /* TransitionViewController.swift */; };
 		1AE83FAB2749E7F4002851BA /* CalendarUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A9DCB932741A00E00A1DC84 /* CalendarUI.framework */; };
 		1AE83FAC2749E7F4002851BA /* CalendarUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1A9DCB932741A00E00A1DC84 /* CalendarUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -122,6 +123,7 @@
 		1A9DCBE2274238DD00A1DC84 /* CalendarUIConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUIConfiguration.swift; sourceTree = "<group>"; };
 		1A9DCBE427423AAB00A1DC84 /* HeaderConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderConfiguration.swift; sourceTree = "<group>"; };
 		1A9DCBE62742437900A1DC84 /* CalendarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarManager.swift; sourceTree = "<group>"; };
+		1AA61B542756E9220039ED4C /* TransitionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,8 +165,9 @@
 		1A38370327508531007832CF /* Calendars */ = {
 			isa = PBXGroup;
 			children = (
-				1A38370427509244007832CF /* MonthViewController.swift */,
-				1A5487C32754C3DC006B3295 /* WeekViewController.swift */,
+				1AA61B532756E9090039ED4C /* Transitions */,
+				1AA61B522756E8FA0039ED4C /* Weekly */,
+				1AA61B512756E8EE0039ED4C /* Monthly */,
 			);
 			path = Calendars;
 			sourceTree = "<group>";
@@ -316,6 +319,30 @@
 				1A9DCBD72741BD7400A1DC84 /* Extensions */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		1AA61B512756E8EE0039ED4C /* Monthly */ = {
+			isa = PBXGroup;
+			children = (
+				1A38370427509244007832CF /* MonthViewController.swift */,
+			);
+			path = Monthly;
+			sourceTree = "<group>";
+		};
+		1AA61B522756E8FA0039ED4C /* Weekly */ = {
+			isa = PBXGroup;
+			children = (
+				1A5487C32754C3DC006B3295 /* WeekViewController.swift */,
+			);
+			path = Weekly;
+			sourceTree = "<group>";
+		};
+		1AA61B532756E9090039ED4C /* Transitions */ = {
+			isa = PBXGroup;
+			children = (
+				1AA61B542756E9220039ED4C /* TransitionViewController.swift */,
+			);
+			path = Transitions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -506,6 +533,7 @@
 				1A38370527509244007832CF /* MonthViewController.swift in Sources */,
 				1A9DCBB92741B42500A1DC84 /* AppDelegate.swift in Sources */,
 				1A9DCBBB2741B42500A1DC84 /* SceneDelegate.swift in Sources */,
+				1AA61B552756E9220039ED4C /* TransitionViewController.swift in Sources */,
 				1A38370127506EF8007832CF /* OutlineItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

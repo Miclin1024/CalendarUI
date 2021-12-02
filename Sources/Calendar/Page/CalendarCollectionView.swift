@@ -9,6 +9,15 @@ import UIKit
 
 class CalendarCollectionView: UICollectionView {
     
+    override var intrinsicContentSize: CGSize {
+        return contentSize
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+    }
+    
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
         

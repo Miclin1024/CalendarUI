@@ -33,6 +33,11 @@ extension CalendarPageController {
             Section, CalendarDay
         >!
         
+        lazy var pageHeight: CGFloat = {
+            return configuration
+                .preferredHeightForCell * 5
+        }()
+        
         private var needsUpdatePage = false
         
         init(_ calendarUI: CalendarUI, state: CalendarState) {
@@ -62,9 +67,6 @@ extension CalendarPageController {
             calendarCollection.delegate = self
             
             view.addSubview(calendarCollection)
-            let constraints = calendarCollection
-                .constraints(to: view)
-            constraints.bottom.priority = .defaultHigh - 1
             
             let _ = CalendarManager.main.$selectedDays.sink { _ in
                 self.setNeedsUpdatePage()
@@ -76,9 +78,15 @@ extension CalendarPageController {
         
         override func viewDidLayoutSubviews() {
             super.viewDidLayoutSubviews()
+            calendarCollection.frame = CGRect(
+                origin: .zero,
+                size: CGSize(
+                    width: view.bounds.width,
+                    height: pageHeight))
             calendarCollection.collectionViewLayout.invalidateLayout()
             calendarCollection.setCollectionViewLayout(
                 createLayout(), animated: false)
+
         }
     }
 }
@@ -236,7 +244,8 @@ extension CalendarPageController.Page {
         // Floor to avoid floating-point error that would cause
         // row to overflow
         let width = floor(view.bounds.width / CGFloat(7))
-        let height = view.bounds.height / CGFloat(numberOfRows(in: state))
+        let height = pageHeight /
+        CGFloat(numberOfRows(in: state))
         layout.itemSize = CGSize(width: width, height: height)
         
         return layout

@@ -10,28 +10,41 @@ import CalendarUI
 
 class OutlineViewController: UIViewController {
     
-    enum Section {
-        case main
+    enum Section: String, CaseIterable {
+        case monthly = "Monthly Calendars"
+        case weekly = "Weekly Calendars"
+        case transition = "Calendar Transitions"
+        
+        var title: String {
+            self.rawValue
+        }
+        
+        var data: [OutlineItem] {
+            switch self {
+            case .monthly:
+                return [
+                    OutlineItem(
+                        title: "Multiple Selection",
+                        viewController: MonthlyWithMultipleSelection.self,
+                        subitems: []),
+                ]
+            case .weekly:
+                return [
+                    OutlineItem(
+                        title: "Single Selection",
+                        viewController: WeeklyWithSingleSelection.self,
+                        subitems: [])
+                ]
+            case .transition:
+                return [
+                    OutlineItem(
+                        title: "Week & Month",
+                        viewController: WeekMonthTransitions.self,
+                        subitems: [])
+                ]
+            }
+        }
     }
-    
-    private let data: [OutlineItem] = [
-        OutlineItem(title: "Monthly Calendars", subitems: [
-            OutlineItem(title: "with Multiple Selection",
-                        viewController: MonthViewController.self,
-                        subitems: []),
-        ]),
-        OutlineItem(title: "Weekly Calendars", subitems: [
-            OutlineItem(title: "with Multiple Selection",
-                        viewController: WeekViewController.self,
-                        subitems: []),
-        ]),
-        OutlineItem(title: "Transitions", subitems: [
-            OutlineItem(
-                title: "Week & Month",
-                viewController:TransitionViewController.self,
-                subitems: [])
-        ])
-    ]
     
     private var outlineCollection: UICollectionView!
     
@@ -52,8 +65,7 @@ class OutlineViewController: UIViewController {
         view.addSubview(outlineCollection)
         
         configureDataSource()
-        let snapshot = generateSnapshot()
-        dataSource.apply(snapshot, to: .main)
+        applySnapshots()
     }
 }
 
@@ -62,13 +74,25 @@ private extension OutlineViewController {
     
     func createLayout() -> UICollectionViewLayout {
         
-        let listConfiguration = UICollectionLayoutListConfiguration(
+        var listConfiguration = UICollectionLayoutListConfiguration(
             appearance: .insetGrouped)
+        listConfiguration.headerMode = .supplementary
         return UICollectionViewCompositionalLayout.list(
             using: listConfiguration)
     }
     
     func configureDataSource() {
+        
+        let headerRegistration = UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { [unowned self] headerView, elementKind, indexPath in
+            
+            let headerItem = self.dataSource.snapshot()
+                .sectionIdentifiers[indexPath.section]
+            
+            var configuration = headerView.defaultContentConfiguration()
+            configuration.text = headerItem.title
+            
+            headerView.contentConfiguration = configuration
+        }
         
         let nodeItemRegistration = UICollectionView.CellRegistration<
             UICollectionViewListCell, OutlineItem> { cell, indexPath, item in
@@ -106,31 +130,41 @@ private extension OutlineViewController {
                 return collectionView.dequeueConfiguredReusableCell(
                     using: configuration, for: indexPath, item: item)
             }
+        
+        dataSource.supplementaryViewProvider = { [unowned self] collectionView, elementKind, indexPath in
+            if elementKind == UICollectionView.elementKindSectionHeader {
+                return self.outlineCollection.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
+            } else {
+                return nil
+            }
+        }
     }
 }
 
 // MARK: Snapshot
 private extension OutlineViewController {
     
-    func generateSnapshot() -> NSDiffableDataSourceSectionSnapshot<OutlineItem> {
+    func applySnapshots() {
         
-        var snapshot = NSDiffableDataSourceSectionSnapshot<OutlineItem>()
+        var snapshot = NSDiffableDataSourceSnapshot<Section, OutlineItem>()
+        snapshot.appendSections(Section.allCases)
+        dataSource.apply(snapshot)
 
-        for root in data {
-            var frontier = [root]
-            snapshot.append([root], to: nil)
-            while !frontier.isEmpty {
-                let item = frontier.popLast()!
-                if !item.subitems.isEmpty {
-                    snapshot.append(item.subitems, to: item)
-                    frontier.append(contentsOf: item.subitems.reversed())
+        for section in Section.allCases {
+            var sectionSnapshot = NSDiffableDataSourceSectionSnapshot<OutlineItem>()
+            for root in section.data {
+                var frontier = [root]
+                sectionSnapshot.append([root], to: nil)
+                while !frontier.isEmpty {
+                    let item = frontier.popLast()!
+                    if !item.subitems.isEmpty {
+                        sectionSnapshot.append(item.subitems, to: item)
+                        frontier.append(contentsOf: item.subitems.reversed())
+                    }
                 }
             }
+            dataSource.apply(sectionSnapshot, to: section)
         }
-        
-//        snapshot.append([parent], to: nil)
-//        snapshot.append(parent.subitems, to: parent)
-        return snapshot
     }
 }
 

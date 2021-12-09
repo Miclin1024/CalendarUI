@@ -164,7 +164,7 @@ extension CalendarPageController {
                 [page], direction: direction,
                 animated: animated, completion: { _ in
                     CalendarManager.main.state = state
-                    self.resizeHeight(state: state)
+//                    self.resizeHeight(state: state)
                     completion?()
                 }
             )

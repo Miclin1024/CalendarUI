@@ -1,14 +1,14 @@
 //
-//  WeekViewController.swift
+//  MonthlyWithMultipleSelection.swift
 //  CalendarUISampleApp
 //
-//  Created by Michael Lin on 11/29/21.
+//  Created by Michael Lin on 11/25/21.
 //
 
 import UIKit
 import CalendarUI
 
-class WeekViewController: UIViewController {
+class MonthlyWithMultipleSelection: UIViewController {
     
     var calendar: CalendarUI!
     
@@ -18,11 +18,9 @@ class WeekViewController: UIViewController {
         view.backgroundColor = .systemGroupedBackground
         
         var configuration = CalendarUI.Configuration()
-        configuration.calendarConfiguration.allowMultipleSelection = false
+        configuration.calendarConfiguration.allowMultipleSelection = true
         
-        calendar = CalendarUI(
-            initialState: .init(withLayout: .week, date: .now),
-            configuration: configuration)
+        calendar = CalendarUI(configuration: configuration)
         addChild(calendar)
         calendar.didMove(toParent: self)
         view.addSubview(calendar.view)

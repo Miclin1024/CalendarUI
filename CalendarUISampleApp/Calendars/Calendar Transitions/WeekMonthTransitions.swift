@@ -1,16 +1,14 @@
 //
-//  TransitionViewController.swift
+//  WeekMonthTransitions.swift
 //  CalendarUISampleApp
 //
 //  Created by Michael Lin on 11/30/21.
 //
 
-import Foundation
-
 import UIKit
 import CalendarUI
 
-class TransitionViewController: UIViewController {
+class WeekMonthTransitions: UIViewController {
     
     var calendar: CalendarUI!
     

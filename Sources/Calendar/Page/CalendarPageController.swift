@@ -79,6 +79,17 @@ final class CalendarPageController: UIPageViewController {
 
 // MARK: Page Controller Data Source
 extension CalendarPageController: UIPageViewControllerDataSource {
+
+    /**
+     Reset the data source of the page view controller.
+     
+     If a data source is already present, the method will set it to `nil` before resetting it to
+     `self` again, effectively clearing the cached view controllers of neighboring pages.
+     */
+    private func resetDataSource() {
+        dataSource = nil
+        dataSource = self
+    }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         let vc = viewController as! CalendarPageController.Page
@@ -118,11 +129,12 @@ extension CalendarPageController {
         pagePool.values.forEach { $0.configuration = configuration }
     }
     
-    func transition(to state: CalendarState, animated: Bool, completion: (()->Void)? = nil) {
+    func transition(to newState: CalendarState, animated: Bool, completion: (()->Void)? = nil) {
         let currentState = CalendarManager.main.state
-        guard currentState != state else { return }
+        guard currentState != newState else { return }
+        CalendarManager.main.state = newState
         
-        if CalendarState.shouldUseInPlaceTransition(currentState, state) {
+        if CalendarState.shouldUseInPlaceTransition(currentState, newState) {
             // Perform an in-place transition if the target state is in the same month
             // and only differs by its layout.
             guard let page = pagePool[currentState] else {
@@ -133,41 +145,41 @@ extension CalendarPageController {
                 return
             }
             
-            page.transition(
-                to: state,
-                animated: true,
-                completion: {
-                    // Update reuse pool about the mutation
-                    self.pagePool.removeValue(forKey: currentState)
-                    self.pagePool[state] = page
-                    CalendarManager.main.state = state
-                    completion?()
-                }
-            )
+            // Update reuse pool about the mutation
+            self.pagePool.removeValue(forKey: currentState)
+            self.pagePool[newState] = page
+            
+            page.transition(to: newState, animated: true, completion: completion)
             
             /**
-             The size of the calendar page is independent of the dimension of its residing view controller.
-             This ensures that the calendar collection view can safely perform its animation without being affect
-             by the change in size of its surrounding views.
+             The size of each calendar page is detached from the dimension of its residing view controller.
+             This ensures that the calendar page can be independently sized and safely perform its
+             animation without being affected by the resizing of its surrounding views.
              */
             UIView.animate(withDuration: 0.4, animations: {
-                self.resizeHeight(state: state)
+                self.resizeHeight(state: newState)
             }, completion: nil)
             
+            resetDataSource()
         } else {
             // Otherwise, bring up a new page for the target calendar state.
-            let page = calendarPage(for: state)
+            let page = calendarPage(for: newState)
             let direction: UIPageViewController.NavigationDirection = currentState
-                .firstDateInMonthOrWeek < state.firstDateInMonthOrWeek ?
+                .firstDateInMonthOrWeek < newState.firstDateInMonthOrWeek ?
                 .forward : .reverse
             setViewControllers(
                 [page], direction: direction,
-                animated: animated, completion: { _ in
-                    CalendarManager.main.state = state
-//                    self.resizeHeight(state: state)
-                    completion?()
-                }
+                animated: animated, completion: { _ in completion?() }
             )
+            
+            /**
+             The size of each calendar page is detached from the dimension of its residing view controller.
+             This ensures that the calendar page can be independently sized and safely perform its
+             animation without being affected by the resizing of its surrounding views.
+             */
+            UIView.animate(withDuration: 0.4, animations: {
+                self.resizeHeight(state: newState)
+            }, completion: nil)
         }
     }
     

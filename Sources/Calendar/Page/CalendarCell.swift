@@ -15,4 +15,6 @@ open class CalendarCell: UICollectionViewCell {
         let pool = CalendarManager.main.fetchReusePool(for: type(of: self))
         pool.enqueue(views: [self])
     }
+    
+    func configure(using day: CalendarDay, state: CalendarState) {}
 }

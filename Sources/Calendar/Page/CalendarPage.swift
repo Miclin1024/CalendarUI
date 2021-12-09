@@ -17,7 +17,13 @@ extension CalendarPageController {
         
         unowned var calendarUI: CalendarUI
         
-        var state: CalendarState
+        var state: CalendarState {
+            didSet {
+                if oldValue != state {
+                    setNeedsUpdatePage()
+                }
+            }
+        }
         
         var configuration: Configuration.CalendarConfiguration {
             didSet {
@@ -110,12 +116,22 @@ extension CalendarPageController.Page {
         dataSource.apply(
             snapshot, animatingDifferences: animated,
             completion: {
-                self.state = state
                 self.calendarCollection
                     .invalidateIntrinsicContentSize()
                 completion?()
             }
         )
+        
+        self.reconfigureCells(using: state)
+    }
+    
+    func reconfigureCells(using state: CalendarState) {
+        let days = dataSource.snapshot().itemIdentifiers
+        for day in days {
+            guard let indexPath = dataSource.indexPath(for: day) else { continue }
+            guard let cell = calendarCollection.cellForItem(at: indexPath) else { continue }
+            (cell as! CalendarCell).configure(using: day, state: state)
+        }
     }
     
     /**
@@ -126,6 +142,7 @@ extension CalendarPageController.Page {
     func updatePageIfNeeded() {
         if needsUpdatePage {
             updatePage()
+            reconfigureCells(using: state)
         }
     }
     

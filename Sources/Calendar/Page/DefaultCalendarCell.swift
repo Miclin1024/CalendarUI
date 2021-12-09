@@ -19,6 +19,8 @@ class DefaultCalendarCell: CalendarCell {
         }
     }
     
+    private var isSubviewsInitialized = false
+    
     private let numberLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -44,25 +46,23 @@ class DefaultCalendarCell: CalendarCell {
         backgroundView?.layer
             .cornerRadius = selectedBackgroundSize / 2
     }
-}
-
-// MARK: View Configuration
-extension DefaultCalendarCell {
-    func configure(using day: CalendarDay,
-                   state: CalendarState) {
+    
+    override func configure(using day: CalendarDay,
+                            state: CalendarState) {
+        super.configure(using: day, state: state)
+        
+        guard self.day != day || self.state != state else { return }
+        
         self.day = day
         self.state = state
         let date = day.date
         
+        initializeSubviewsIfNeeded()
+        
         let calendar = CalendarManager.calendar
         numberLabel.text = "\(calendar.component(.day, from: date))"
         numberLabel.font = configuration.font
-        contentView.addSubview(numberLabel)
-        
         numberLabel.textColor = numberLabelTextColor()
-        
-        backgroundView = UIView()
-        backgroundView?.clipsToBounds = true
         
         if day.isToday {
             backgroundView?.backgroundColor = configuration.todayBackgroundColor
@@ -70,6 +70,20 @@ extension DefaultCalendarCell {
         } else {
             backgroundView?.backgroundColor = configuration.selectedBackgroundColor
             backgroundView?.alpha = isSelected ? 1 : 0
+        }
+    }
+}
+
+// MARK: View Configuration
+private extension DefaultCalendarCell {
+    
+    func initializeSubviewsIfNeeded() {
+        if !isSubviewsInitialized {
+            contentView.addSubview(numberLabel)
+            backgroundView = UIView()
+            backgroundView?.clipsToBounds = true
+            
+            isSubviewsInitialized = true
         }
     }
     

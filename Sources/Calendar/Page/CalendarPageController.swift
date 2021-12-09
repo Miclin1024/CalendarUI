@@ -133,34 +133,26 @@ extension CalendarPageController {
                 return
             }
             
-            func inPlaceUpdateCompletion() {
-                // Update reuse pool about the mutation
-                self.pagePool.removeValue(forKey: currentState)
-                self.pagePool[state] = page
-                CalendarManager.main.state = state
-                completion?()
-            }
+            page.transition(
+                to: state,
+                animated: true,
+                completion: {
+                    // Update reuse pool about the mutation
+                    self.pagePool.removeValue(forKey: currentState)
+                    self.pagePool[state] = page
+                    CalendarManager.main.state = state
+                    completion?()
+                }
+            )
             
-            if currentState.layout == .week {
-                page.transition(
-                    to: state,
-                    animated: false,
-                    completion: {
-                        UIView.animate(withDuration: 0.4, animations: {
-                            self.resizeHeight(state: state)
-                        }, completion: nil)
-                        inPlaceUpdateCompletion()
-                    }
-                )
-            } else {
-                UIView.animate(withDuration: 0.4, animations: {
-                    self.resizeHeight(state: state)
-                }, completion: { _ in
-                    page.transition(to: state, animated: false)
-                    inPlaceUpdateCompletion()
-                })
-            }
-
+            /**
+             The size of the calendar page is independent of the dimension of its residing view controller.
+             This ensures that the calendar collection view can safely perform its animation without being affect
+             by the change in size of its surrounding views.
+             */
+            UIView.animate(withDuration: 0.4, animations: {
+                self.resizeHeight(state: state)
+            }, completion: nil)
             
         } else {
             // Otherwise, bring up a new page for the target calendar state.

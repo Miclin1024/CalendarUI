@@ -33,10 +33,9 @@ extension CalendarPageController {
             Section, CalendarDay
         >!
         
-        lazy var pageHeight: CGFloat = {
-            return configuration
-                .preferredHeightForCell * 5
-        }()
+        var pageHeight: CGFloat {
+            configuration.preferredHeightForCell * 5
+        }
         
         private var needsUpdatePage = false
         
@@ -86,7 +85,6 @@ extension CalendarPageController {
             calendarCollection.collectionViewLayout.invalidateLayout()
             calendarCollection.setCollectionViewLayout(
                 createLayout(), animated: false)
-
         }
     }
 }
@@ -104,6 +102,9 @@ extension CalendarPageController.Page {
                 level: .error)
             return
         }
+        
+        // Update state stored in page
+        self.state = state
         
         let snapshot = generateSnapshot(for: state)
         dataSource.apply(
@@ -244,11 +245,18 @@ extension CalendarPageController.Page {
         // Floor to avoid floating-point error that would cause
         // row to overflow
         let width = floor(view.bounds.width / CGFloat(7))
-        let height = pageHeight /
-        CGFloat(numberOfRows(in: state))
+        let height = cellHeight(for: state)
         layout.itemSize = CGSize(width: width, height: height)
         
         return layout
+    }
+    
+    private func cellHeight(for state: CalendarState) -> CGFloat {
+        if state.layout == .week {
+            return configuration.preferredHeightForCell
+        } else {
+            return pageHeight / CGFloat(numberOfRows(in: state))
+        }
     }
     
     private func numberOfRows(in state: CalendarState) -> Int {

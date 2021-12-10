@@ -15,11 +15,13 @@ class DefaultCalendarCell: CalendarCell {
     
     override var isSelected: Bool {
         didSet {
-            animateSelection()
+            if isInitialized {
+                animateSelection()
+            }
         }
     }
     
-    private var isSubviewsInitialized = false
+    private var isInitialized = false
     
     private let numberLabel: UILabel = {
         let label = UILabel()
@@ -30,6 +32,18 @@ class DefaultCalendarCell: CalendarCell {
     private let calendar = CalendarManager.calendar
     
     // TODO: Event Indicator
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        contentView.addSubview(numberLabel)
+        backgroundView = UIView()
+        backgroundView?.clipsToBounds = true
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -57,8 +71,6 @@ class DefaultCalendarCell: CalendarCell {
         self.state = state
         let date = day.date
         
-        initializeSubviewsIfNeeded()
-        
         let calendar = CalendarManager.calendar
         numberLabel.text = "\(calendar.component(.day, from: date))"
         numberLabel.font = configuration.font
@@ -71,21 +83,13 @@ class DefaultCalendarCell: CalendarCell {
             backgroundView?.backgroundColor = configuration.selectedBackgroundColor
             backgroundView?.alpha = isSelected ? 1 : 0
         }
+        
+        isInitialized = true
     }
 }
 
 // MARK: View Configuration
 private extension DefaultCalendarCell {
-    
-    func initializeSubviewsIfNeeded() {
-        if !isSubviewsInitialized {
-            contentView.addSubview(numberLabel)
-            backgroundView = UIView()
-            backgroundView?.clipsToBounds = true
-            
-            isSubviewsInitialized = true
-        }
-    }
     
     /**
      Returns the color based on selection status, the underlying calendar day and state.

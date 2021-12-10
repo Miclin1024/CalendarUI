@@ -204,6 +204,7 @@ private extension CalendarPageController {
     
     func calendarPage(for state: CalendarState) -> Page {
         if let page = pagePool[state] {
+            page.updatePageIfNeeded()
             return page
         }
         

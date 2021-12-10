@@ -83,12 +83,15 @@ extension CalendarPageController {
         
         override func viewDidLayoutSubviews() {
             super.viewDidLayoutSubviews()
-            calendarCollection.frame = CGRect(
-                origin: .zero,
-                size: CGSize(
-                    width: view.bounds.width,
-                    height: pageHeight))
-            calendarCollection.collectionViewLayout.invalidateLayout()
+            let size = CGSize(width: view.bounds.width,
+                              height: pageHeight)
+            if calendarCollection.bounds.size != size {
+                calendarCollection.frame = CGRect(
+                    origin: .zero,
+                    size: size)
+
+            }
+            
             calendarCollection.setCollectionViewLayout(
                 createLayout(), animated: false)
         }
@@ -116,16 +119,15 @@ extension CalendarPageController.Page {
         dataSource.apply(
             snapshot, animatingDifferences: animated,
             completion: {
-                self.calendarCollection
-                    .invalidateIntrinsicContentSize()
+                self.calendarCollection.invalidateIntrinsicContentSize()
                 completion?()
             }
         )
         
-        self.reconfigureCells(using: state)
+        updatePageIfNeeded()
     }
     
-    func reconfigureCells(using state: CalendarState) {
+    private func reconfigureCells(using state: CalendarState) {
         let days = dataSource.snapshot().itemIdentifiers
         for day in days {
             guard let indexPath = dataSource.indexPath(for: day) else { continue }
@@ -141,8 +143,8 @@ extension CalendarPageController.Page {
      */
     func updatePageIfNeeded() {
         if needsUpdatePage {
-            updatePage()
             reconfigureCells(using: state)
+            updatePage()
         }
     }
     
@@ -150,7 +152,10 @@ extension CalendarPageController.Page {
         let range = state.dateRange
         let syncDays = CalendarManager.main.selectedDays
             .filter { range.contains($0.date) }
-        syncCalendarSelection(withDays: syncDays)
+        
+        DispatchQueue.main.async {
+            self.syncCalendarSelection(withDays: syncDays)
+        }
 
         calendarCollection.allowsMultipleSelection = configuration.allowMultipleSelection
     }
@@ -165,11 +170,10 @@ extension CalendarPageController.Page {
     private func syncCalendarSelection(withDays days: Set<CalendarDay>) {
         var daysToSelect = days
         var daysToDeselect = Set<CalendarDay>()
-        let paths = calendarCollection
-            .indexPathsForSelectedItems
+        let paths = self.calendarCollection.indexPathsForSelectedItems
         if let paths = paths {
             for indexPath in paths {
-                let day = dataSource
+                let day = self.dataSource
                     .itemIdentifier(for: indexPath)!
                 /**
                  If a day is already selected, and is on the list of
@@ -188,8 +192,8 @@ extension CalendarPageController.Page {
         }
         
         UIView.performWithoutAnimation {
-            selectDays(Array(daysToSelect), animated: false)
-            deselectDays(Array(daysToDeselect), animated: false)
+            self.selectDays(Array(daysToSelect), animated: false)
+            self.deselectDays(Array(daysToDeselect), animated: false)
         }
     }
     
@@ -312,7 +316,6 @@ private extension CalendarPageController.Page {
             }
             let cell = cv.dequeueConfiguredReusableCell(
                 using: registration, for: indexPath, item: day)
-            cell.configuration = self.configuration
             return cell
         }
         
